@@ -9,11 +9,12 @@
 
 #include <QStringList>
 
-#include <memory>
-#include <thread>
 
 #include <pluginlib/class_list_macros.h>
 #include <ros/ros.h>
+
+#include <memory>
+#include <thread>
 
 #include "solo_dashboard/solo_dashboard.hpp"
 

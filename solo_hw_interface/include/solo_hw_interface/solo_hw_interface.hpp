@@ -7,8 +7,8 @@
 //
 //
 
-#ifndef SOLO_HW__HARDWARE_INTERFACE_HPP_
-#define SOLO_HW__HARDWARE_INTERFACE_HPP_
+#ifndef SOLO_HW_INTERFACE__SOLO_HW_INTERFACE_HPP_
+#define SOLO_HW_INTERFACE__SOLO_HW_INTERFACE_HPP_
 
 #include <controller_manager/controller_manager.h>
 #include <hardware_interface/joint_command_interface.h>
@@ -16,6 +16,10 @@
 #include <hardware_interface/robot_hw.h>
 #include <ros/ros.h>
 #include <solo_driver/solo_driver.hpp>
+
+#include <memory>
+#include <string>
+#include <vector>
 
 namespace solo_hw_interface
 {
@@ -25,7 +29,7 @@ public:
   SoloHwInterface(ros::NodeHandle root_nh, ros::NodeHandle controller_nh);
   ~SoloHwInterface() {}
 
-  void read(); // hardware_interface::return_type ??
+  void read();  // hardware_interface::return_type ??
   void write();
 
 private:
@@ -55,6 +59,5 @@ private:
   // Driver
   std::shared_ptr<solo_hw_interface::SoloDriver> solo_driver_;
 };
-
-} // namespace solo_hw
-#endif // SOLO_HW__HARDWARE_INTERFACE_HPP_
+}  // namespace solo_hw_interface
+#endif  // SOLO_HW_INTERFACE__SOLO_HW_INTERFACE_HPP_

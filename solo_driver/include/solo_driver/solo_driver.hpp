@@ -7,12 +7,14 @@
 //
 //
 
-#ifndef SOLO_HW__MOTOR_DRIVER_HPP_
-#define SOLO_HW__MOTOR_DRIVER_HPP_
+#ifndef SOLO_DRIVER__SOLO_DRIVER_HPP_
+#define SOLO_DRIVER__SOLO_DRIVER_HPP_
 
 #include <robot_interfaces/robot_frontend.hpp>
 #include <robot_interfaces/sensors/sensor_frontend.hpp>
 #include <ros/ros.h>
+
+#include <memory>
 
 namespace solo_driver
 {
@@ -20,38 +22,38 @@ namespace solo_driver
 class Action
 {
 public:
-    int values[2];
+  int values[2];
 
-    void print(bool backline) const
-    {
-        std::cout << "action: " << values[0] << " " << values[1] << " ";
-        if (backline) std::cout << "\n";
-    }
+  void print(bool backline) const
+  {
+    std::cout << "action: " << values[0] << " " << values[1] << " ";
+    if (backline) {std::cout << "\n";}
+  }
 
-    template <class Archive>
-    void serialize(Archive& ar)
-    {
-        ar(values);
-    }
+  template<class Archive>
+  void serialize(Archive & ar)
+  {
+    ar(values);
+  }
 };
 
 // Reference: https://github.com/open-dynamic-robot-initiative/robot_interfaces/blob/master/demos/types.hpp
 class Observation
 {
 public:
-    int values[2];
+  int values[2];
 
-    void print(bool backline) const
-    {
-        std::cout << "observation: " << values[0] << " " << values[1] << " ";
-        if (backline) std::cout << "\n";
-    }
+  void print(bool backline) const
+  {
+    std::cout << "observation: " << values[0] << " " << values[1] << " ";
+    if (backline) {std::cout << "\n";}
+  }
 
-    template <class Archive>
-    void serialize(Archive& ar)
-    {
-        ar(values);
-    }
+  template<class Archive>
+  void serialize(Archive & ar)
+  {
+    ar(values);
+  }
 };
 
 class SoloDriver
@@ -60,7 +62,7 @@ public:
   SoloDriver();
   ~SoloDriver() {}
 
-  void init(uint8_t joint_size) {joint_size_ = joint_size};
+  void init(uint8_t joint_size) {joint_size_ = joint_size}
 
   double * read_joint();
   bool write_joint(double * cmd);
@@ -85,5 +87,5 @@ private:
   robot_interfaces::TimeIndex t_index_;
 };
 
-} // namespace solo_hw
-#endif // SOLO_HW__MOTOR_DRIVER_HPP_
+}  // namespace solo_driver
+#endif  // SOLO_DRIVER__SOLO_DRIVER_HPP_

@@ -12,19 +12,24 @@
 namespace solo_controller
 {
 // https://github.com/ros-controls/ros_controllers/blob/noetic-devel/four_wheel_steering_controller/src/four_wheel_steering_controller.cpp
-bool SoloController::init(hardware_interface::RobotHW * robot_hw,
+bool SoloController::init(
+  hardware_interface::RobotHW * robot_hw,
   ros::NodeHandle & root_nh,
   ros::NodeHandle & controller_nh)
 {
   // Joint HWInterface
-  hardware_interface::PositionJointInterface *const pos_joint_hw = robot_hw->get<hardware_interface::PositionJointInterface>();
-  hardware_interface::VelocityJointInterface *const vel_joint_hw = robot_hw->get<hardware_interface::VelocityJointInterface>();
-  hardware_interface::EffortJointInterface *const eff_joint_hw = robot_hw->get<hardware_interface::EffortJointInterface>();
+  hardware_interface::PositionJointInterface * const pos_joint_hw =
+    robot_hw->get<hardware_interface::PositionJointInterface>();
+  hardware_interface::VelocityJointInterface * const vel_joint_hw =
+    robot_hw->get<hardware_interface::VelocityJointInterface>();
+  hardware_interface::EffortJointInterface * const eff_joint_hw =
+    robot_hw->get<hardware_interface::EffortJointInterface>();
 
   // IMU HWInterface
   // https://github.com/PR2/pr2_common/tree/melodic-devel/pr2_description/urdf/sensors
   // TODO(JaehyunShim): Get IMU data using the ros_control framework
-  hardware_interface::ImuSensorInterface *const imu_hw = robot_hw->get<hardware_interface::ImuSensorInterface>();
+  hardware_interface::ImuSensorInterface * const imu_hw =
+    robot_hw->get<hardware_interface::ImuSensorInterface>();
 
   // TODO(JaehyunShim): Check if exception throwing is needed
   controller_nh.getParam("joint", joint_name_);
@@ -39,29 +44,35 @@ bool SoloController::init(hardware_interface::RobotHW * robot_hw,
   for (size_t i = 0; i < joint_size_; i++) {
     try {
       joint_handle_.push_back(eff_joint_hw->getHandle(joint_name_[i]));
-    } catch (const hardware_interface::HardwareInterfaceException &e) {
+    } catch (const hardware_interface::HardwareInterfaceException & e) {
       ROS_ERROR_STREAM("Error: " << e.what());
       return false;
     }
   }
 
   // IMU Handle
-  // TODO(JaehyunShim): Check if multiple imu sensors should be considered. If yes, change to multiple (same as joint)
+  // TODO(JaehyunShim): Check if multiple imu sensors should be considered.
+  // If yes, change to multiple (same as joint)
   try {
     imu_handle_.push_back(imu_hw->getHandle(imu_name_));
-  } catch (const hardware_interface::HardwareInterfaceException &e) {
+  } catch (const hardware_interface::HardwareInterfaceException & e) {
     ROS_ERROR_STREAM("Error: " << e.what());
     return false;
   }
 
   // Initialize ROS publishers
   // TODO(JaehyunShim): Need more consideration on the queue size
-  rt_joint_state_pub_.reset(new realtime_tools::RealtimePublisher<sensor_msgs::JointState>(controller_nh, "joint_states", 10));
-  rt_imu_pub_.reset(new realtime_tools::RealtimePublisher<sensor_msgs::Imu>(controller_nh, "imu", 10));
+  rt_joint_state_pub_.reset(
+    new realtime_tools::RealtimePublisher<sensor_msgs::JointState>(
+      controller_nh, "joint_states", 10));
+  rt_imu_pub_.reset(
+    new realtime_tools::RealtimePublisher<sensor_msgs::Imu>(
+      controller_nh, "imu", 10));
 
   // Initialize ROS subscribers
   // TODO(JaehyunShim): Need more consideration on the queue size
-  joint_cmd_sub_ = controller_nh.subscribe<ipab_controller_msgs::EffortFeedforwardWithJointFeedbackTrajectory>(
+  joint_cmd_sub_ =
+    controller_nh.subscribe<ipab_controller_msgs::EffortFeedforwardWithJointFeedbackTrajectory>(
     "joint_cmd", 10, &SoloController::joint_cmd_callback, this);
 
   return true;
@@ -75,22 +86,18 @@ void SoloController::update(const ros::Time & time, const ros::Duration & period
   ros::Time curr_time = time;
 
   // Get joint data
-  double pos_curr[joint_size_];
-  double vel_curr[joint_size_];
   for (size_t i = 0; i < joint_size_; i++) {
-    pos_curr[i] = joint_handle_[i].getPosition();
-    vel_curr[i] = joint_handle_[i].getVelocity();
+    pos_curr_[i] = joint_handle_[i].getPosition();
+    vel_curr_[i] = joint_handle_[i].getVelocity();
   }
 
-  // TODO(Jaehyun): Rewrite this chunk of code if there is a more clean and intuitive way to process the first loop
+  // TODO(Jaehyun): Rewrite this chunk of code if there is a more
+  // clean and intuitive way to process the first loop
   // First loop for getting previous position and velocity
-  static double pos_prev[joint_size_];
-  static double vel_prev[joint_size_];
-  if (!update_onoff)
-  {
+  if (!update_onoff) {
     for (size_t i = 0; i < joint_size_; i++) {
-      pos_prev[i] = pos_curr[i];
-      vel_prev[i] = vel_curr[i];
+      pos_prev_[i] = pos_curr_[i];
+      vel_prev_[i] = vel_curr_[i];
     }
     update_onoff = true;
     return;
@@ -112,36 +119,34 @@ void SoloController::update(const ros::Time & time, const ros::Duration & period
   lin_acc.z = imu_handle_[i].getLinearAcceleration()[2];
 
   // Get reference position, velocity, effort from the planner
-  std::string name[joint_size_];
-  double pos_ref[joint_size_];
-  double vel_ref[joint_size_];
-  double eff_ref[joint_size_];
-  ipab_controller_msgs::EffortFeedforwardWithJointFeedbackTrajectory joint_cmd_buffer = *(joint_cmd_buffer_.readFromRT());
+  ipab_controller_msgs::EffortFeedforwardWithJointFeedbackTrajectory joint_cmd_buffer =
+    *(joint_cmd_buffer_.readFromRT());
   for (size_t i = 0; i < joint_size_; i++) {
-    name[i] = joint_cmd_buffer.name[i];
-    pos_ref[i] = joint_cmd_buffer.positions[i];
-    vel_ref[i] = joint_cmd_buffer.velocities[i];
-    eff_ref[i] = joint_cmd_buffer.efforts[i];
+    // TODO(Jaehyun): check if joint_name equals joint_cmd_buffer.name[i]
+    pos_ref_[i] = joint_cmd_buffer.positions[i];
+    vel_ref_[i] = joint_cmd_buffer.velocities[i];
+    eff_ref_[i] = joint_cmd_buffer.efforts[i];
   }
 
   // TODO(Jaehyun): Interpolate received reference data if needed
   // Check the email sent from Vlad
 
   // Compute effort command
-  double eff_cmd[joint_size_];
   for (size_t i = 0; i < joint_size_; i++) {
-    eff_cmd[i] = eff_ref[i] + kp_[i] * (vel_ref[i]- vel_prev[i]) + kd_[i] * (pos_ref[i] - pos_prev[i]);
+    eff_cmd_[i] = eff_ref_[i] +
+      kp_[i] * (vel_ref_[i] - vel_prev_[i]) +
+      kd_[i] * (pos_ref_[i] - pos_prev_[i]);
   }
 
   // Save previous position and velocity
   for (size_t i = 0; i < joint_size_; i++) {
-    pos_prev[i] = pos_curr[i];
-    vel_prev[i] = vel_curr[i];
+    pos_prev_[i] = pos_curr_[i];
+    vel_prev_[i] = vel_curr_[i];
   }
 
   // Send effort command to motors
   for (size_t i = 0; i < joint_size_; i++) {
-    joint_handle_[i].setCommand(eff_cmd[i]);
+    joint_handle_[i].setCommand(eff_cmd_[i]);
   }
 
   // Publish joint_state data
@@ -163,7 +168,7 @@ void SoloController::update(const ros::Time & time, const ros::Duration & period
   }
 }
 
-void SoloController::stopping(const ros::Time& /*time*/) {}
+void SoloController::stopping(const ros::Time & /*time*/) {}
 
-} // namespace solo_controller
+}  // namespace solo_controller
 PLUGINLIB_EXPORT_CLASS(solo_controller::SoloController, controller_interface::ControllerBase)

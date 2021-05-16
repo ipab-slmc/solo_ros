@@ -44,7 +44,7 @@ int main(int argc, char * argv[])
   signal(SIGINT, active_handler);
   ros::Rate r(1000);  // 1000[Hz]
   last_time = ros::Time::now();
-  while(ros::ok() && active) {
+  while (ros::ok() && active) {
     curr_time = ros::Time::now();
     elapsed = curr_time - last_time;
     hw_interface.read();
@@ -58,4 +58,3 @@ int main(int argc, char * argv[])
   ros::shutdown();
   return 0;
 }
-

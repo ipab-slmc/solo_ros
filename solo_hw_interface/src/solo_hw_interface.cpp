@@ -7,6 +7,8 @@
 //
 //
 
+#include <memory>
+
 #include "solo_hw_interface/solo_hw_interface.hpp"
 
 namespace solo_hw_interface
@@ -17,7 +19,7 @@ SoloHwInterface::SoloHwInterface(ros::NodeHandle root_nh, ros::NodeHandle contro
   solo_driver_(std::make_shared<solo_hw_interface::SoloDriver>())
 {
   // Get joint names
-  joint_name_.emplace_back("left_wheel_joint",);
+  joint_name_.emplace_back("left_wheel_joint");
   joint_name_.emplace_back("right_wheel_joint");
   joint_size_ = joint_name_.size();
   solo_driver_->init(joint_size_);
@@ -59,9 +61,6 @@ SoloHwInterface::SoloHwInterface(ros::NodeHandle root_nh, ros::NodeHandle contro
   registerInterface(&joint_state_interface_);
   registerInterface(&joint_interface_);
 
-
-
-
   Action action = Action::Zero();
   while (1) {
     auto t = frontend.append_desired_action(action);
@@ -97,4 +96,4 @@ void SoloHwInterface::write()
   solo_driver_->write_joint(cmd);  // maybe better name it to write_joint_cmd
 }
 
-} // namespace solo_hw
+}  // namespace solo_hw_interface

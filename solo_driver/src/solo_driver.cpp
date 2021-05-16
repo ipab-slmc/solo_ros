@@ -9,16 +9,20 @@
 
 #include <solo_driver/solo_driver.hpp>
 
+#include <memory>
+
 namespace solo_driver
 {
 SoloDriver::SoloDriver()
 {
   // Init robot frontend
-  robot_data_ptr_ = std::make_shared<robot_interfaces::MultiProcessRobotData<Action, Observation>>("robot_data", false);
+  robot_data_ptr_ = std::make_shared<robot_interfaces::MultiProcessRobotData<Action, Observation>>(
+    "robot_data", false);
   robot_frontend_ = robot_interfaces::RobotFrontend<Action, Observation>(robot_data_ptr_);
 
   // Init sensor frontend
-  sensor_data_ptr_ = std::make_shared<robot_interfaces::SensorData<ObservationType>>("sensor_data", false);
+  sensor_data_ptr_ = std::make_shared<robot_interfaces::SensorData<ObservationType>>(
+    "sensor_data", false);
   sensor_frontend_ = robot_interfaces::SensorFrontend<ObservationType>(sensor_data_ptr_);
 }
 
@@ -59,4 +63,4 @@ bool SoloDriver::write_joint(double * cmd)
   t_index_ = frontend.append_desired_action(action);
   action.print(false);  // set to true if you want to print action
 }
-} // namespace solo_hw
+}  // namespace solo_driver

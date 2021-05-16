@@ -7,13 +7,13 @@
 //
 //
 
-#include <memory>
-#include <sstream>
-#include <string>
-
 #include <geometry_msgs/Twist.h>
 #include <ros/ros.h>
 #include <std_msgs/String.h>
+
+#include <memory>
+#include <sstream>
+#include <string>
 
 #include "solo_dashboard/rosnode.hpp"
 

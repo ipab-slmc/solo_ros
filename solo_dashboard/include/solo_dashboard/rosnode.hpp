@@ -12,11 +12,11 @@
 
 #include <QStringListModel>
 
-#include <string>
-
 #include <geometry_msgs/Twist.h>
 #include <ros/ros.h>
 #include <std_msgs/msg/String.h>
+
+#include <string>
 
 namespace solo_dashboard
 {
