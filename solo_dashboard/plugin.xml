@@ -1,0 +1,17 @@
+<library path="lib/libsolo_dashboard">
+  <class name="solo_dashboard/SoloDashboard"
+    type="solo_dashboard::SoloDashboard"
+    base_class_type="rqt_gui_cpp::Plugin">
+    <description>Solo Dashboard</description>
+    <qtgui>
+      <group>
+        <label>_Robot Dashboard_</label>
+        <icon type="theme">folder</icon>
+        <statustip>Plugins related to solo dashboard</statustip>
+      </group>
+      <label>Solo Dashboard</label>
+      <icon type="theme">image-x-generic</icon>
+      <statustip>Solo Dashboard</statustip>
+    </qtgui>
+  </class>
+</library>

@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!-- Transmission Macro -->
+  <xacro:macro name="SimpleTransmission" params="prefix">
+    <transmission name="${prefix}_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${prefix}_joint">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${prefix}_joint_motor">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+  </xacro:macro>
+
+  <!-- Front Left Leg -->
+  <xacro:SimpleTransmission prefix="FL_HAA"/>
+  <xacro:SimpleTransmission prefix="FL_HFE"/>
+  <xacro:SimpleTransmission prefix="FL_KFE"/>
+  <!-- Front Right Leg -->
+  <xacro:SimpleTransmission prefix="FR_HAA"/>
+  <xacro:SimpleTransmission prefix="FR_HFE"/>
+  <xacro:SimpleTransmission prefix="FR_KFE"/>
+  <!-- Hind Left Leg -->
+  <xacro:SimpleTransmission prefix="HL_HAA"/>
+  <xacro:SimpleTransmission prefix="HL_HFE"/>
+  <xacro:SimpleTransmission prefix="HL_KFE"/>
+  <!-- Hind Right Leg -->
+  <xacro:SimpleTransmission prefix="HR_HAA"/>
+  <xacro:SimpleTransmission prefix="HR_HFE"/>
+  <xacro:SimpleTransmission prefix="HR_KFE"/>
+
+</robot>

@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<?xml-model
+  href="http://download.ros.org/schema/package_format3.xsd"
+  schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>solo_description</name>
+  <version>0.0.0</version>
+  <description>ROS package for solo description</description>
+  <maintainer email="sjh2808@gmail.com">Jaehyun Shim</maintainer>
+  <license>MIT</license>  <!-- TODO(JaehyunShim): Check what license will be used  -->
+  <url type="repository">https://github.com/jaehyunshim/solo</url>
+  <author email="sjh2808@gmail.com">Jaehyun Shim</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+ 
+  <depend>joint_state_publisher</depend>
+  <depend>joint_state_publisher_gui</depend>
+  <depend>robot_state_publisher</depend>
+  <depend>rviz</depend>
+  <depend>xacro</depend>
+
+  <export>
+    <gazebo_ros gazebo_model_path="${prefix}/../"/>  <!-- TODO(JaehyunShim): How are they going to be used in gazebo? -->
+  </export>
+</package>

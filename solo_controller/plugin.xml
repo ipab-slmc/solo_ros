@@ -1,0 +1,7 @@
+<library path="lib/libsolo_controller">
+  <class name="solo_controller/SoloController"
+    type="solo_controller::SoloController"
+    base_class_type="controller_interface::ControllerBase">
+    <description>ROS controller plugin for solo controller</description>
+  </class>
+</library>
