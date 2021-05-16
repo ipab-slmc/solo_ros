@@ -5,9 +5,8 @@ add_compile_options(-std=c++11)
 
 # Find dependencies
 set(dependencies
-  controller_interface
-  realtime_tools
-  sensor_msgs
+  controller_manager
+  hardware_interface
   solo_driver
 )
 find_package(catkin REQUIRED COMPONENTS ${dependencies})
@@ -15,7 +14,8 @@ find_package(catkin REQUIRED COMPONENTS ${dependencies})
 # Build
 catkin_package(
   INCLUDE_DIRS include
-  CATKIN_DEPENDS ${dependencies})
+  CATKIN_DEPENDS ${dependencies}
+)
 
 include_directories(
   include
@@ -25,8 +25,8 @@ include_directories(
 add_executable(solo_control_node
   src/solo_control_node.cpp
   src/solo_hw_interface.cpp)
-add_dependencies(solo_control_node ${catkin_EXPORTED_TARGETS}) # ${${PROJECT_NAME}_EXPORTED_TARGETS})
-target_link_libraries(solo_control_node ${catkin_LIBRARIES})
+add_dependencies(solo_control_node ${catkin_EXPORTED_TARGETS} ${${PROJECT_NAME}_EXPORTED_TARGETS})
+target_link_libraries(solo_control_node ${catkin_LIBRARIES} solo_driver)  # why solo_driver comes here?
 
 # Install
 install(TARGETS solo_control_node

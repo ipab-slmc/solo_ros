@@ -29,6 +29,7 @@ public:
   SoloHwInterface(ros::NodeHandle root_nh, ros::NodeHandle controller_nh);
   ~SoloHwInterface() {}
 
+  bool init(ros::NodeHandle& root_nh, ros::NodeHandle &robot_hw_nh);
   void read();  // hardware_interface::return_type ??
   void write();
 
@@ -57,7 +58,7 @@ private:
   std::vector<hardware_interface::JointHandle> joint_command_handle_;
 
   // Driver
-  std::shared_ptr<solo_hw_interface::SoloDriver> solo_driver_;
+  std::shared_ptr<solo_driver::SoloDriver> solo_driver_;
 };
 }  // namespace solo_hw_interface
 #endif  // SOLO_HW_INTERFACE__SOLO_HW_INTERFACE_HPP_

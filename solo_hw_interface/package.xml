@@ -15,7 +15,6 @@
 
   <depend>controller_manager</depend>
   <depend>hardware_interface</depend>
-  <depend>roscpp</depend>
   <depend>solo_driver</depend>
 
 </package>
