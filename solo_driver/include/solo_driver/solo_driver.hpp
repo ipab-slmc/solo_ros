@@ -16,6 +16,8 @@
 
 #include <memory>
 
+// Reference: https://github.com/open-dynamic-robot-initiative/solo/blob/master/src/solo12.cpp
+
 namespace solo_driver
 {
 // Reference: https://github.com/open-dynamic-robot-initiative/robot_interfaces/blob/master/demos/types.hpp

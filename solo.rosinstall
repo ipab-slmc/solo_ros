@@ -1,0 +1,9 @@
+# How to Use
+#
+# $ cd ~/catkin_ws/src/
+# $ rm .rosinstall
+# $ wstool init
+# $ wstool merge https://raw.githubusercontent.com/JaehyunShim/doodles/master/solo.rosinstall
+# $ wstool update #-j8
+
+- git: {local-name: ipab_controller_msgs, uri: 'https://github.com/ipab-slmc/ipab_controller_msgs.git', version: master}

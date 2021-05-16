@@ -6,6 +6,8 @@ add_compile_options(-std=c++11)
 # Find dependencies
 set(dependencies
   controller_interface
+  hardware_interface
+  pluginlib
   realtime_tools
   ipab_controller_msgs
   sensor_msgs

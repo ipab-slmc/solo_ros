@@ -47,7 +47,7 @@ private:
 
   // Interface
   std::vector<hardware_interface::JointStateInterface> joint_state_interface_;
-  std::vector<hardware_interface::PositionJointInterface> joint_command_interface_;
+  std::vector<hardware_interface::EffortJointInterface> joint_command_interface_;
   // std::vector<hardware_interface::PositionJointInterface> pos_joint_interface_;
   // std::vector<hardware_interface::VelocityJointInterface> vel_joint_interface_;
   // std::vector<hardware_interface::EffortJointInterface> eff_joint_interface_;

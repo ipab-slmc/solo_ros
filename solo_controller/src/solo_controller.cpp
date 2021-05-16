@@ -22,7 +22,7 @@ bool SoloController::init(
     robot_hw->get<hardware_interface::PositionJointInterface>();
   hardware_interface::VelocityJointInterface * const vel_joint_hw =
     robot_hw->get<hardware_interface::VelocityJointInterface>();
-  hardware_interface::EffortJointInterface * const eff_joint_hw =
+  hardware_interface::EffortJointInterface * const eff_joint_hw =    // TODO(JaehyunShim): Has to be command!!!
     robot_hw->get<hardware_interface::EffortJointInterface>();
 
   // IMU HWInterface
@@ -35,15 +35,27 @@ bool SoloController::init(
   controller_nh.getParam("joint", joint_name_);
   joint_size_ = joint_name_.size();
   for (size_t i = 0; i < joint_size_; i++) {
-    controller_nh.getParam("gain/" + joint_names_[i] + "/pid/p", kp_[i]);
-    controller_nh.getParam("gain/" + joint_names_[i] + "/pid/d", kd_[i]);
+    controller_nh.getParam("gain/" + joint_name_[i] + "/pid/p", kp_[i]);
+    controller_nh.getParam("gain/" + joint_name_[i] + "/pid/d", kd_[i]);
   }
   controller_nh.getParam("imu", imu_name_);
+
+  // Resize joint data vectors
+  for (size_t i = 0; i < joint_size_; i++) {
+    pos_curr_.emplace_back(0.0);
+    vel_curr_.emplace_back(0.0);
+    pos_prev_.emplace_back(0.0);
+    vel_prev_.emplace_back(0.0);
+    pos_ref_.emplace_back(0.0);
+    vel_ref_.emplace_back(0.0);
+    eff_ref_.emplace_back(0.0);
+    eff_cmd_.emplace_back(0.0);
+  }
 
   // Joint Handle
   for (size_t i = 0; i < joint_size_; i++) {
     try {
-      joint_handle_.push_back(eff_joint_hw->getHandle(joint_name_[i]));
+      joint_handle_.emplace_back(eff_joint_hw->getHandle(joint_name_[i]));
     } catch (const hardware_interface::HardwareInterfaceException & e) {
       ROS_ERROR_STREAM("Error: " << e.what());
       return false;
@@ -54,7 +66,7 @@ bool SoloController::init(
   // TODO(JaehyunShim): Check if multiple imu sensors should be considered.
   // If yes, change to multiple (same as joint)
   try {
-    imu_handle_.push_back(imu_hw->getHandle(imu_name_));
+    imu_handle_ = imu_hw->getHandle(imu_name_);
   } catch (const hardware_interface::HardwareInterfaceException & e) {
     ROS_ERROR_STREAM("Error: " << e.what());
     return false;
@@ -72,8 +84,8 @@ bool SoloController::init(
   // Initialize ROS subscribers
   // TODO(JaehyunShim): Need more consideration on the queue size
   joint_cmd_sub_ =
-    controller_nh.subscribe<ipab_controller_msgs::EffortFeedforwardWithJointFeedbackTrajectory>(
-    "joint_cmd", 10, &SoloController::joint_cmd_callback, this);
+    controller_nh.subscribe<ipab_controller_msgs::EffortFeedforwardWithJointFeedback>(
+      "joint_cmd", 10, &SoloController::joint_cmd_callback, this);
 
   return true;
 }
@@ -109,17 +121,17 @@ void SoloController::update(const ros::Time & time, const ros::Duration & period
   // after checking Fig2 from https://arxiv.org/pdf/1909.06586.pdf
   // Useful future reference: https://github.com/ros-controls/ros_controllers/blob/noetic-devel/imu_sensor_controller/src/imu_sensor_controller.cpp
   geometry_msgs::Vector3 ang_vel;
-  ang_vel.x = imu_handle_[i].getAngularVelocity()[0];
-  ang_vel.y = imu_handle_[i].getAngularVelocity()[1];
-  ang_vel.z = imu_handle_[i].getAngularVelocity()[2];
+  ang_vel.x = imu_handle_.getAngularVelocity()[0];
+  ang_vel.y = imu_handle_.getAngularVelocity()[1];
+  ang_vel.z = imu_handle_.getAngularVelocity()[2];
 
   geometry_msgs::Vector3 lin_acc;
-  lin_acc.x = imu_handle_[i].getLinearAcceleration()[0];
-  lin_acc.y = imu_handle_[i].getLinearAcceleration()[1];
-  lin_acc.z = imu_handle_[i].getLinearAcceleration()[2];
+  lin_acc.x = imu_handle_.getLinearAcceleration()[0];
+  lin_acc.y = imu_handle_.getLinearAcceleration()[1];
+  lin_acc.z = imu_handle_.getLinearAcceleration()[2];
 
   // Get reference position, velocity, effort from the planner
-  ipab_controller_msgs::EffortFeedforwardWithJointFeedbackTrajectory joint_cmd_buffer =
+  ipab_controller_msgs::EffortFeedforwardWithJointFeedback joint_cmd_buffer =
     *(joint_cmd_buffer_.readFromRT());
   for (size_t i = 0; i < joint_size_; i++) {
     // TODO(Jaehyun): check if joint_name equals joint_cmd_buffer.name[i]
@@ -151,17 +163,17 @@ void SoloController::update(const ros::Time & time, const ros::Duration & period
 
   // Publish joint_state data
   if (rt_joint_state_pub_->trylock()) {
-    rt_joint_state_pub_->msg.header.stamp = curr_time;
-    rt_joint_state_pub_->msg.name = joint_name_;
-    rt_joint_state_pub_->msg.position = pos_curr;
-    rt_joint_state_pub_->msg.velocity = vel_curr;
+    rt_joint_state_pub_->msg_.header.stamp = curr_time;
+    rt_joint_state_pub_->msg_.name = joint_name_;
+    rt_joint_state_pub_->msg_.position = pos_curr_;
+    rt_joint_state_pub_->msg_.velocity = vel_curr_;
     rt_joint_state_pub_->unlockAndPublish();
   }
 
   // Publish imu data
   if (rt_imu_pub_->trylock()) {
     rt_imu_pub_->msg_.header.stamp = curr_time;
-    rt_imu_pub_->msg_.header.frame_id = imu_handle_[i].getFrameId();
+    rt_imu_pub_->msg_.header.frame_id = imu_handle_.getFrameId();
     rt_imu_pub_->msg_.angular_velocity = ang_vel;
     rt_imu_pub_->msg_.linear_acceleration = lin_acc;
     rt_imu_pub_->unlockAndPublish();
@@ -171,4 +183,6 @@ void SoloController::update(const ros::Time & time, const ros::Duration & period
 void SoloController::stopping(const ros::Time & /*time*/) {}
 
 }  // namespace solo_controller
+
+#include <pluginlib/class_list_macros.hpp>
 PLUGINLIB_EXPORT_CLASS(solo_controller::SoloController, controller_interface::ControllerBase)
