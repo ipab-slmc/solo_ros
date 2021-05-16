@@ -9,8 +9,6 @@
 
 #include <QStringList>
 
-
-#include <pluginlib/class_list_macros.h>
 #include <ros/ros.h>
 
 #include <memory>
@@ -187,4 +185,6 @@ void SoloDashboard::press_r_button()
   solo_dashboard_node_->ang_vel_ = -0.01;
 }
 }  // namespace solo_dashboard
+
+#include <pluginlib/class_list_macros.hpp>
 PLUGINLIB_EXPORT_CLASS(solo_dashboard::SoloDashboard, rqt_gui_cpp::Plugin)

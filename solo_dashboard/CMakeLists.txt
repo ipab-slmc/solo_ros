@@ -6,25 +6,35 @@ add_compile_options(-std=c++11)
 # Find dependencies
 set(dependencies
   geometry_msgs
+  pluginlib
   qt_gui_cpp
   roscpp
   rqt_gui_cpp
   std_msgs
-  Qt5Widgets
+  pluginlib
 )
 find_package(catkin REQUIRED COMPONENTS ${dependencies})
+find_package(Qt5Widgets REQUIRED)
+
+catkin_package(
+  INCLUDE_DIRS include
+  CATKIN_DEPENDS ${dependencies}
+)
 
 # Build
 include_directories(
   include
+  ${${PROJECT_NAME}_INCLUDE_DIRECTORIES}
+  ${catkin_INCLUDE_DIRS}
 )
 
 set(src_files
-  src/solo_dashboard.cpp
   src/rosnode.cpp
+  src/solo_dashboard.cpp
 )
 
 set(hd_files
+  include/${PROJECT_NAME}/rosnode.hpp
   include/${PROJECT_NAME}/solo_dashboard.hpp
 )
 
@@ -40,20 +50,18 @@ add_library(${PROJECT_NAME} SHARED
   ${moc_files}
   ${ui_hd_files}
 )
-add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS} ${dependencies})
-target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
+add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} Qt5::Widgets)
 
 # Install
 install(TARGETS ${PROJECT_NAME}
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
-install(DIRECTORY include/
+install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-)
-
-install(PROGRAMS scripts/solo_dashboard
-  DESTINATION lib/${PROJECT_NAME}
 )
 
 install(DIRECTORY ui

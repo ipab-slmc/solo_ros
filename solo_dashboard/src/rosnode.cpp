@@ -17,37 +17,23 @@
 
 #include "solo_dashboard/rosnode.hpp"
 
-using namespace std::placeholders;
-using namespace std::chrono_literals;
-
 namespace solo_dashboard
 {
 RosNode::RosNode()
-: Node("solo_dashboard")
+: nh_(""),
+  private_nh_("~")
 {
   // Force flush of the stdout buffer
   setvbuf(stdout, NULL, _IONBF, BUFSIZ);
 
-  // ROS Publisher & Subscriber & Client
-  rclcpp::QoS qos(rclcpp::KeepLast(10));
-  chatter_pub_ = this->create_publisher<std_msgs::msg::String>("chatter", qos);
-  chatter_sub_ =
-    this->create_subscription<std_msgs::msg::String>(
-    "chatter",
-    qos,
-    std::bind(&RosNode::chatter_callback, this, std::placeholders::_1));
-  cmd_vel_pub_ = this->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", qos);
+  // Initialize ROS publishers and subscribers
+  // TODO(JaehyunShim): more consideration on queue size
+  chatter_pub_ = nh_.advertise<std_msgs::String>("chatter", 10);
+  chatter_sub_ = nh_.subscribe("chatter", 10, &RosNode::chatter_callback, this);
+  chatter_pub_ = nh_.advertise<geometry_msgs::Twist>("cmd_vel", 10);
 
-  // ROS Timer
-  timer_ = this->create_wall_timer(
-    10ms,
-    std::bind(&RosNode::timer_callback, this));
-  RCLCPP_INFO(this->get_logger(), "Initialized rqt example node");
-}
-
-RosNode::~RosNode()
-{
-  RCLCPP_INFO(this->get_logger(), "Terminated rqt example node");
+  // Initialize ROS timer
+  timer_ = nh_.createTimer(ros::Duration(0.01), &RosNode::timer_callback);
 }
 
 void RosNode::timer_callback()
@@ -56,23 +42,23 @@ void RosNode::timer_callback()
   if (pub_onoff_ == true) {
     std::stringstream ss;
     ss << "hello world " << count;
-    auto msg = std_msgs::msg::String();
+    auto msg = std_msgs::String();
     msg.data = ss.str();
-    chatter_pub_->publish(msg);
-    RCLCPP_INFO(this->get_logger(), "Publisher: %s", msg.data.c_str());
+    chatter_pub_.publish(msg);
+    ROS_INFO("Publisher: %s", msg.data.c_str());
     count++;
   }
 
-  auto msg2 = geometry_msgs::msg::Twist();
+  auto msg2 = geometry_msgs::Twist();
   msg2.linear.x = lin_vel_;
   msg2.angular.z = ang_vel_;
-  cmd_vel_pub_->publish(msg2);
+  cmd_vel_pub_.publish(msg2);
 }
 
-void RosNode::chatter_callback(const std_msgs::msg::String::SharedPtr msg)
+void RosNode::chatter_callback(const std_msgs::String::ConstPtr & msg)
 {
   if (sub_onoff_ == true) {
-    RCLCPP_INFO(this->get_logger(), "Subscriber: %s", msg->data.c_str());
+    ROS_INFO("Subscriber: %s", msg->data.c_str());
   }
 }
 }  // namespace solo_dashboard
