@@ -7,8 +7,8 @@
 ## Install
 - Ubuntu 20.04
 - ROS Noetic Ninjemys
-- Rosdep
-- Dependencies
+- Dependencies by rosdep
+- Dependencies by rosinstall
 
 ## Run
 ```sh

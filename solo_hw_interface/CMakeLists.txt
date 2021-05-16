@@ -7,8 +7,6 @@ add_compile_options(-std=c++11)
 set(dependencies
   controller_interface
   realtime_tools
-  robot_interfaces
-  ipab_controller_msgs
   sensor_msgs
   solo_driver
 )
@@ -17,7 +15,6 @@ find_package(catkin REQUIRED COMPONENTS ${dependencies})
 # Build
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES open_manipulator
   CATKIN_DEPENDS ${dependencies})
 
 include_directories(

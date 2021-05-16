@@ -5,14 +5,14 @@ add_compile_options(-std=c++11)
 
 # Find dependencies
 set(dependencies
-  robot_interfaces
+  # robot_interfaces
+  sensor_msgs  # Temp
 )
 find_package(catkin REQUIRED COMPONENTS ${dependencies})
 
 # Build
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES open_manipulator
   CATKIN_DEPENDS ${dependencies})
 
 include_directories(
