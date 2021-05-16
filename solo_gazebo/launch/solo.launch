@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
   <!-- Arguments -->
+  <arg name="robot" default="solo"/>
   <arg name="debug" default="false"/>
   <arg name="gui" default="true"/>
   <arg name="headless" default="false"/>
@@ -15,9 +16,17 @@
     <arg name="headless" value="$(arg headless)"/>
   </include>
 
+  <!-- Load URDF -->
+  <include file="$(find solo_description)/launch/solo_upload.launch"/>
+
+  <!-- Spawn the robot model -->
+  <node pkg="gazebo_ros" type="spawn_model" name="spawn_model" respawn="false" output="screen"
+     args="-urdf -model $(arg robot) -z 0.5 -param robot_description"/>
+
   <!-- Load parameters for controllers -->
   <rosparam file="$(find solo_gazebo)/config/solo_controller.yaml" command="load"/>
 
-  <!-- Spawn robot -->
+  <!-- Spawn controllers -->
+  <!-- TODO(JaehyunShim): Uncomment below after finishing debugging solo_controller -->
   <node pkg="controller_manager" type="spawner" name="spawner" respawn="false" output="screen" args="solo_controller"/>
 </launch>

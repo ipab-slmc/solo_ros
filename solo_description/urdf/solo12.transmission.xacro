@@ -5,7 +5,7 @@
   <xacro:macro name="SimpleTransmission" params="prefix">
     <transmission name="${prefix}_trans">
       <type>transmission_interface/SimpleTransmission</type>
-      <joint name="${prefix}_joint">
+      <joint name="${prefix}">
         <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       </joint>
       <actuator name="${prefix}_joint_motor">

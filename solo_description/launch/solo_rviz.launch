@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
   <!-- Upload robot_description??? -->
-  <include file="$(find solo_description)/launch/upload.launch"/>
+  <include file="$(find solo_description)/launch/solo_upload.launch"/>
 
   <!-- Joint State Publisher -->
   <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher">
