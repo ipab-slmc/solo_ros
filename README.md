@@ -9,14 +9,16 @@
 ## Run
 ```sh
 # HW Control Node
-
-# Gazebo
-
-# Rviz
 $ roslaunch
 
-# GUI
-$
+# Gazebo
+$ roslaunch solo_gazebo solo.launch
+
+# Rviz
+$ roslaunch solo_description rviz.launch
+
+# Dashboard
+$ rqt
 ```
 
 # Issue

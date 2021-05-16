@@ -15,5 +15,6 @@
   <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher"/>
 
   <!-- Rviz -->
-  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find solo_description)/rviz/robot.rviz"/>
+  <!-- TODO(JaehyunShim): check the difference between display.rviz, solo.rviz -->
+  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find solo_description)/rviz/solo.rviz"/>
 </launch>

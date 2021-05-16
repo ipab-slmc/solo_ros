@@ -3,6 +3,11 @@ project(solo_description)
 
 add_compile_options(-std=c++11)
 
+# Find dependencies
+find_package(catkin REQUIRED)
+
+catkin_package()
+
 # Install
 install(DIRECTORY launch meshes rviz urdf
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
