@@ -20,13 +20,11 @@ bool SoloController::init(
   // TODO(JaehyunShim): Check if exception throwing is needed
   controller_nh.getParam("joint", joint_name_);
   joint_size_ = joint_name_.size();
-  for (size_t i = 0; i < joint_size_; i++) {
-    controller_nh.getParam("gain/" + joint_name_[i] + "/pid/p", kp_[i]);
-    controller_nh.getParam("gain/" + joint_name_[i] + "/pid/d", kd_[i]);
-  }
 
   // Resize joint data vectors
   for (size_t i = 0; i < joint_size_; i++) {
+    kp_.emplace_back(0.0);
+    kd_.emplace_back(0.0);
     pos_curr_.emplace_back(0.0);
     vel_curr_.emplace_back(0.0);
     pos_prev_.emplace_back(0.0);
@@ -35,6 +33,11 @@ bool SoloController::init(
     vel_ref_.emplace_back(0.0);
     eff_ref_.emplace_back(0.0);
     eff_cmd_.emplace_back(0.0);
+  }
+
+  for (size_t i = 0; i < joint_size_; i++) {
+    controller_nh.getParam("gain/" + joint_name_[i] + "/pid/p", kp_[i]);
+    controller_nh.getParam("gain/" + joint_name_[i] + "/pid/d", kd_[i]);
   }
 
   // Joint Handle
@@ -58,6 +61,17 @@ bool SoloController::init(
   joint_cmd_sub_ =
     controller_nh.subscribe<ipab_controller_msgs::EffortFeedforwardWithJointFeedback>(
       "joint_cmd", 10, &SoloController::joint_cmd_callback, this);
+  // TODO(JaehyunShim): Check why writeFromNonRT is required in init()
+  ipab_controller_msgs::EffortFeedforwardWithJointFeedback joint_cmd_buffer;
+  joint_cmd_buffer.positions.resize(joint_size_);
+  joint_cmd_buffer.velocities.resize(joint_size_);
+  joint_cmd_buffer.efforts.resize(joint_size_);
+  for (size_t i = 0; i < joint_size_; i++) {
+    joint_cmd_buffer.positions[i] = 0.0;
+    joint_cmd_buffer.velocities[i] = 0.0;
+    joint_cmd_buffer.efforts[i] = 0.0;
+  }
+  joint_cmd_buffer_.writeFromNonRT(joint_cmd_buffer);
 
   return true;
 }
@@ -88,10 +102,11 @@ void SoloController::update(const ros::Time & time, const ros::Duration & period
   }
 
   // Get reference position, velocity, effort from the planner
+  // TODO(Jaehyun): Check what happens if there is data left in buffer
   ipab_controller_msgs::EffortFeedforwardWithJointFeedback joint_cmd_buffer =
     *(joint_cmd_buffer_.readFromRT());
   for (size_t i = 0; i < joint_size_; i++) {
-    // TODO(Jaehyun): check if joint_name equals joint_cmd_buffer.name[i]
+    // TODO(Jaehyun): Add lines to check if joint_name equals joint_cmd_buffer.name[i]
     pos_ref_[i] = joint_cmd_buffer.positions[i];
     vel_ref_[i] = joint_cmd_buffer.velocities[i];
     eff_ref_[i] = joint_cmd_buffer.efforts[i];
@@ -115,7 +130,10 @@ void SoloController::update(const ros::Time & time, const ros::Duration & period
 
   // Send effort command to motors
   for (size_t i = 0; i < joint_size_; i++) {
+    // Notice: eff_cmd will diverge if you don't give pos_ref, vel_ref, eff_ref.
+    // joint_handle_[i].setCommand(0.0);
     joint_handle_[i].setCommand(eff_cmd_[i]);
+    // ROS_INFO("%d joint command: %lf", i, eff_cmd_[i]);
   }
 
   // Publish joint_state data
