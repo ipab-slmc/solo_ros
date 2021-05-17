@@ -11,7 +11,7 @@
 #define SOLO_DASHBOARD__SOLO_DASHBOARD_HPP_
 
 #include <rqt_gui_cpp/plugin.h>
-#include "ui_solo_dashboard.h"  // TODO(JaehyunShim): doesn't work...
+#include "ui_solo_dashboard.h"
 #include <QWidget>
 #include <QTimer>
 

@@ -66,6 +66,7 @@ public:
 
   void init(uint8_t joint_size) {joint_size_ = joint_size;}
 
+  // TODO(JaehyunShim): Need more consideration on public read and write functions
   double * read_joint();
   bool write_joint(double * cmd);
 

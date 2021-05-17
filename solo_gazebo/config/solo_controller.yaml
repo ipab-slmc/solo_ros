@@ -18,7 +18,7 @@ solo_controller:
     - HR_HFE
     - HR_KFE
   gain:
-    # TODO(JaehyunShim): Temporarily set randon pid gains. Rewrite.
+    # TODO(JaehyunShim): Temporarily set random pid gains. Rewrite.
     # Front Left
     FL_HAA:
       pid: {p: 300.0, i: 0, d: 50.0, i_clamp: 0, antiwindup: false}

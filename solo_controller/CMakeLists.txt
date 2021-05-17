@@ -7,9 +7,9 @@ add_compile_options(-std=c++11)
 set(dependencies
   controller_interface
   hardware_interface
+  ipab_controller_msgs
   pluginlib
   realtime_tools
-  ipab_controller_msgs
   sensor_msgs
 )
 find_package(catkin REQUIRED COMPONENTS ${dependencies})
