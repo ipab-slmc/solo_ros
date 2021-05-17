@@ -60,7 +60,7 @@ bool SoloController::init(
   // TODO(JaehyunShim): Need more consideration on the queue size
   joint_cmd_sub_ =
     controller_nh.subscribe<ipab_controller_msgs::EffortFeedforwardWithJointFeedback>(
-      "joint_cmd", 10, &SoloController::joint_cmd_callback, this);
+    "joint_cmd", 10, &SoloController::joint_cmd_callback, this);
   // TODO(JaehyunShim): Check why writeFromNonRT is required in init()
   ipab_controller_msgs::EffortFeedforwardWithJointFeedback joint_cmd_buffer;
   joint_cmd_buffer.positions.resize(joint_size_);

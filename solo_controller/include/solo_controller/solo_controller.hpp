@@ -24,7 +24,8 @@
 
 namespace solo_controller
 {
-class SoloController : public controller_interface::Controller<hardware_interface::EffortJointInterface>
+class SoloController
+  : public controller_interface::Controller<hardware_interface::EffortJointInterface>
 {
 public:
   SoloController() {}
@@ -67,7 +68,8 @@ private:
   void joint_cmd_callback(
     const ipab_controller_msgs::EffortFeedforwardWithJointFeedback::ConstPtr & msg)
   {
-    joint_cmd_buffer_.writeFromNonRT(*msg);  // TODO(JaehyunShim): Check if the type of the input *msg is correct
+    // TODO(JaehyunShim): Check if the type of the input *msg is correct
+    joint_cmd_buffer_.writeFromNonRT(*msg);
   }
 };
 }  // namespace solo_controller

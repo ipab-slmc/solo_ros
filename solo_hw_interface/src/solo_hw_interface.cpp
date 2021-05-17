@@ -26,7 +26,7 @@ SoloHwInterface::SoloHwInterface(ros::NodeHandle root_nh, ros::NodeHandle contro
   solo_driver_->init(joint_size_);
 }
 
-bool SoloHwInterface::init(ros::NodeHandle& /*root_nh*/, ros::NodeHandle &/*robot_hw_nh*/)
+bool SoloHwInterface::init(ros::NodeHandle & /*root_nh*/, ros::NodeHandle & /*robot_hw_nh*/)
 {
   // ??
   // https://github.com/ROBOTIS-SYS/aimbot_base/blob/d32fe11eac74f0f91f8ba814ab9983e253e4833c/aimbot_hw/src/hardware_interface.cpp

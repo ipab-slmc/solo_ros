@@ -11,12 +11,12 @@
 #define SOLO_DASHBOARD__SOLO_DASHBOARD_HPP_
 
 #include <rqt_gui_cpp/plugin.h>
-#include "ui_solo_dashboard.h"
 #include <QWidget>
 #include <QTimer>
 
 #include <memory>
 
+#include "../solo_dashboard/ui_solo_dashboard.h"
 #include "solo_dashboard/rosnode.hpp"
 
 namespace solo_dashboard

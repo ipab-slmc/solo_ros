@@ -39,11 +39,11 @@ private:
 
   ros::Publisher chatter_pub_;
   ros::Subscriber chatter_sub_;
-  void chatter_callback(const std_msgs::String::ConstPtr &msg);
+  void chatter_callback(const std_msgs::String::ConstPtr & msg);
   ros::Publisher cmd_vel_pub_;
   ros::Publisher solo_test_pub_;
   ros::Timer timer_;
-  void timer_callback(const ros::TimerEvent& te);
+  void timer_callback(const ros::TimerEvent & te);
 };
 }  // namespace solo_dashboard
 #endif  // SOLO_DASHBOARD__ROSNODE_HPP_

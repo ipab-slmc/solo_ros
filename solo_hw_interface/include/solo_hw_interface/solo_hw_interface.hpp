@@ -29,7 +29,7 @@ public:
   SoloHwInterface(ros::NodeHandle root_nh, ros::NodeHandle controller_nh);
   ~SoloHwInterface() {}
 
-  bool init(ros::NodeHandle& root_nh, ros::NodeHandle &robot_hw_nh);
+  bool init(ros::NodeHandle & root_nh, ros::NodeHandle & robot_hw_nh);
   void read();  // hardware_interface::return_type ??
   void write();
 

@@ -38,7 +38,7 @@ RosNode::RosNode()
   timer_ = nh_.createTimer(ros::Duration(0.01), &RosNode::timer_callback, this);
 }
 
-void RosNode::timer_callback(const ros::TimerEvent& te)
+void RosNode::timer_callback(const ros::TimerEvent & te)
 {
   static int count = 0;
   if (pub_onoff_ == true) {

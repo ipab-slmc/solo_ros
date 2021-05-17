@@ -16,8 +16,9 @@ namespace solo_driver
 SoloDriver::SoloDriver()
 {
   // Init robot frontend
-  // robot_data_ptr_ = std::make_shared<robot_interfaces::MultiProcessRobotData<Action, Observation>>(
-  //   "robot_data", false);
+  // robot_data_ptr_ =
+  //   std::make_shared<robot_interfaces::MultiProcessRobotData<Action, Observation>>(
+  //     "robot_data", false);
   // robot_frontend_ = robot_interfaces::RobotFrontend<Action, Observation>(robot_data_ptr_);
 
   // Init sensor frontend
