@@ -52,8 +52,8 @@ void RosNode::timer_callback(const ros::TimerEvent& te)
   }
 
   auto cmd_vel_msg = geometry_msgs::Twist();
-  msg2.linear.x = lin_vel_;
-  msg2.angular.z = ang_vel_;
+  cmd_vel_msg.linear.x = lin_vel_;
+  cmd_vel_msg.angular.z = ang_vel_;
   cmd_vel_pub_.publish(cmd_vel_msg);
 
   // auto joint_cmd_msg = ipab_controller_msgs::EffortFeedforwardWithJointFeedback();
