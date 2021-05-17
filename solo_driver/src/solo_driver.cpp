@@ -27,7 +27,7 @@ SoloDriver::SoloDriver()
   // sensor_frontend_ = robot_interfaces::SensorFrontend<ObservationType>(sensor_data_ptr_);
 }
 
-double * SoloDriver::read_joint()
+std::vector<double> SoloDriver::read_joint()
 {
   // TODO(JaehyunShim): Write read_onoff switch code
   // Write has to be done first
@@ -38,12 +38,16 @@ double * SoloDriver::read_joint()
   // robot_observation_ = robot_frontend_.get_observation(t_index_);
   // robot_observation_.print(true);
   // static double robot_data[joint_size_];
-  double * robot_data;
   // for (size_t i = 0; i < joint_size_; i++) {
   //   robot_data[i] = robot_observation_.values[i];
   // }
 
-  return robot_data;
+  // Dummy
+  for (size_t i = 0; i < joint_size_; i++) {
+    joint_data_.at(i) = 0.0;
+  }
+
+  return joint_data_;
 }
 
 double SoloDriver::read_sensor()
@@ -53,14 +57,21 @@ double SoloDriver::read_sensor()
   // Get sensor observation
   // sensor_observation_ = sensor_frontend_.get_observation(t_index_);
   // sensor_observation_.print(true);
-  static double sensor_data;
   // sensor_data = sensor_observation_.values[0];
+
+  // Dummy
+  static double sensor_data;
 
   return sensor_data;
 }
 
-bool SoloDriver::write_joint(double * cmd)
+bool SoloDriver::write_joint(std::vector<double> cmd)
 {
+  // Dummy
+  for (size_t i = 0; i < joint_size_; i++) {
+    ROS_INFO("Joint command for joint %d, %lf", i, cmd.at(i));
+  }
+
   // Set robot action
   // t_index_ = frontend.append_desired_action(action);
   // action.print(false);  // set to true if you want to print action

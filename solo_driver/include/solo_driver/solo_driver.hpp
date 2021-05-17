@@ -64,16 +64,24 @@ public:
   SoloDriver();
   ~SoloDriver() {}
 
-  void init(uint8_t joint_size) {joint_size_ = joint_size;}
+  void init(uint8_t joint_size)
+  {
+    joint_size_ = joint_size;
+    joint_data_.resize(joint_size_);
+  }
 
+  // Joint
   // TODO(JaehyunShim): Need more consideration on public read and write functions
-  double * read_joint();
-  bool write_joint(double * cmd);
+  std::vector<double> read_joint();
+  bool write_joint(std::vector<double> cmd);
 
+  // IMU
   double read_sensor();
 
 private:
   uint8_t joint_size_;
+  std::vector<double> joint_data_;
+
   // Reference for robot_frontend
   // https://github.com/open-dynamic-robot-initiative/robot_interfaces/blob/master/demos/demo_multiprocess_frontend.cpp
   // std::shared_ptr<robot_interfaces::MultiProcessRobotData<Action, Observation>> robot_data_ptr_;

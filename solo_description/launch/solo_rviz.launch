@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-  <!-- Upload robot_description??? -->
+  <!-- Upload robot_description parameter to parameter server -->
   <include file="$(find solo_description)/launch/solo_upload.launch"/>
 
   <!-- Joint State Publisher -->

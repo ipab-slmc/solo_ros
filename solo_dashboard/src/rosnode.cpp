@@ -23,9 +23,6 @@ RosNode::RosNode()
 : nh_(""),
   private_nh_("~")
 {
-  // Force flush of the stdout buffer
-  setvbuf(stdout, NULL, _IONBF, BUFSIZ);
-
   // Initialize ROS publishers and subscribers
   // TODO(JaehyunShim): more consideration on queue size
   chatter_pub_ = nh_.advertise<std_msgs::String>("chatter", 10);

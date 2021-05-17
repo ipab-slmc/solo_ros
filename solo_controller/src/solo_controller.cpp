@@ -11,13 +11,12 @@
 
 namespace solo_controller
 {
-// https://github.com/ros-controls/ros_controllers/blob/noetic-devel/four_wheel_steering_controller/src/four_wheel_steering_controller.cpp
 bool SoloController::init(
   hardware_interface::EffortJointInterface * hw,
   ros::NodeHandle & root_nh,
   ros::NodeHandle & controller_nh)
 {
-  // TODO(JaehyunShim): Check if exception throwing is needed
+  // TODO(JaehyunShim): Add exception throwing lines
   controller_nh.getParam("joint", joint_name_);
   joint_size_ = joint_name_.size();
 
@@ -35,6 +34,7 @@ bool SoloController::init(
     eff_cmd_.emplace_back(0.0);
   }
 
+  // Get p, d gains from parameter server
   for (size_t i = 0; i < joint_size_; i++) {
     controller_nh.getParam("gain/" + joint_name_[i] + "/pid/p", kp_[i]);
     controller_nh.getParam("gain/" + joint_name_[i] + "/pid/d", kd_[i]);
@@ -61,7 +61,7 @@ bool SoloController::init(
   joint_cmd_sub_ =
     controller_nh.subscribe<ipab_controller_msgs::EffortFeedforwardWithJointFeedback>(
     "joint_cmd", 10, &SoloController::joint_cmd_callback, this);
-  // TODO(JaehyunShim): Check why writeFromNonRT is required in init()
+
   ipab_controller_msgs::EffortFeedforwardWithJointFeedback joint_cmd_buffer;
   joint_cmd_buffer.positions.resize(joint_size_);
   joint_cmd_buffer.velocities.resize(joint_size_);
@@ -90,7 +90,7 @@ void SoloController::update(const ros::Time & time, const ros::Duration & period
   }
 
   // TODO(Jaehyun): Rewrite this chunk of code if there is a more
-  // clean and intuitive way to process the first loop
+  // clean and intuitive way to process the first loop.
   // First loop for getting previous position and velocity
   if (!update_onoff) {
     for (size_t i = 0; i < joint_size_; i++) {
@@ -102,18 +102,16 @@ void SoloController::update(const ros::Time & time, const ros::Duration & period
   }
 
   // Get reference position, velocity, effort from the planner
-  // TODO(Jaehyun): Check what happens if there is data left in buffer
   ipab_controller_msgs::EffortFeedforwardWithJointFeedback joint_cmd_buffer =
     *(joint_cmd_buffer_.readFromRT());
   for (size_t i = 0; i < joint_size_; i++) {
-    // TODO(Jaehyun): Add lines to check if joint_name equals joint_cmd_buffer.name[i]
+    // TODO(Jaehyun): Add lines checking if joint_name equals joint_cmd_buffer.name[i]
     pos_ref_[i] = joint_cmd_buffer.positions[i];
     vel_ref_[i] = joint_cmd_buffer.velocities[i];
     eff_ref_[i] = joint_cmd_buffer.efforts[i];
   }
 
   // TODO(Jaehyun): Interpolate received reference data if needed
-  // Check the email sent from Vlad
 
   // Compute effort command
   for (size_t i = 0; i < joint_size_; i++) {
@@ -130,7 +128,6 @@ void SoloController::update(const ros::Time & time, const ros::Duration & period
 
   // Send effort command to motors
   for (size_t i = 0; i < joint_size_; i++) {
-    // Notice: eff_cmd will diverge if you don't give pos_ref, vel_ref, eff_ref.
     joint_handle_[i].setCommand(eff_cmd_[i]);
     ROS_INFO("%d joint command: %lf", i, eff_cmd_[i]);
   }

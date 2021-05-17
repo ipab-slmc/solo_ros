@@ -44,14 +44,18 @@ private:
   std::vector<double> pos_;
   std::vector<double> vel_;
   std::vector<double> eff_;
-  std::vector<double> cmd_;
+  std::vector<double> pos_cmd_;
+  std::vector<double> vel_cmd_;
+  std::vector<double> eff_cmd_;
 
   // Interface
   std::vector<hardware_interface::JointStateInterface> joint_state_interface_;
-  std::vector<hardware_interface::EffortJointInterface> joint_command_interface_;
-  // std::vector<hardware_interface::PositionJointInterface> pos_joint_interface_;
-  // std::vector<hardware_interface::VelocityJointInterface> vel_joint_interface_;
-  // std::vector<hardware_interface::EffortJointInterface> eff_joint_interface_;
+  std::vector<hardware_interface::PositionJointInterface> pos_joint_interface_;
+  std::vector<hardware_interface::VelocityJointInterface> vel_joint_interface_;
+  std::vector<hardware_interface::EffortJointInterface> eff_joint_interface_;
+
+  // TODO(JaehyunShim): Check if joint_limit_interface needs to be added
+  // Reference: https://github.com/ros-simulation/gazebo_ros_pkgs/blob/kinetic-devel/gazebo_ros_control/include/gazebo_ros_control/default_robot_hw_sim.h#L113
 
   // Handle
   std::vector<hardware_interface::JointStateHandle> joint_state_handle_;
