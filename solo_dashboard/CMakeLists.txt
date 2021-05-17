@@ -8,6 +8,7 @@ add_compile_options(-std=c++11)
 # Find dependencies
 set(dependencies
   geometry_msgs
+  ipab_controller_msgs
   pluginlib
   qt_gui_cpp
   roscpp

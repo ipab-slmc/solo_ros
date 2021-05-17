@@ -46,9 +46,9 @@ void SoloDashboard::initPlugin(qt_gui_cpp::PluginContext & context)
   connect(ui_.pub_off_button, SIGNAL(clicked(bool)), this, SLOT(set_pub_off()));
   connect(ui_.sub_on_button, SIGNAL(clicked(bool)), this, SLOT(set_sub_on()));
   connect(ui_.sub_off_button, SIGNAL(clicked(bool)), this, SLOT(set_sub_off()));
+  connect(ui_.solo_test_on_button, SIGNAL(clicked(bool)), this, SLOT(set_solo_test_on()));
+  connect(ui_.solo_test_off_button, SIGNAL(clicked(bool)), this, SLOT(set_solo_test_off()));
 
-  connect(ui_.button_1_1, SIGNAL(clicked(bool)), this, SLOT(press_button_1_1()));
-  connect(ui_.button_1_2, SIGNAL(clicked(bool)), this, SLOT(press_button_1_2()));
   connect(ui_.button_2_1, SIGNAL(clicked(bool)), this, SLOT(press_button_2_1()));
   connect(ui_.button_2_2, SIGNAL(clicked(bool)), this, SLOT(press_button_2_2()));
   connect(ui_.button_3_1, SIGNAL(clicked(bool)), this, SLOT(press_button_3_1()));
@@ -111,11 +111,12 @@ void SoloDashboard::ros_timer_callback()
 
 void SoloDashboard::display_timer_callback()
 {
-  ui_.pub_onoff_state->setText(get_pub_onff());
-  ui_.sub_onoff_state->setText(get_sub_onff());
+  ui_.pub_onoff_state->setText(get_pub_onoff());
+  ui_.sub_onoff_state->setText(get_sub_onoff());
+  ui_.solo_test_onoff_state->setText(get_solo_test_onoff());
 }
 
-QString SoloDashboard::get_pub_onff()
+QString SoloDashboard::get_pub_onoff()
 {
   QString q_str;
   if (solo_dashboard_node_->pub_onoff_ == true) {
@@ -127,10 +128,22 @@ QString SoloDashboard::get_pub_onff()
   return q_str;
 }
 
-QString SoloDashboard::get_sub_onff()
+QString SoloDashboard::get_sub_onoff()
 {
   QString q_str;
   if (solo_dashboard_node_->sub_onoff_ == true) {
+    q_str = "on";
+  } else {
+    q_str = "off";
+  }
+
+  return q_str;
+}
+
+QString SoloDashboard::get_solo_test_onoff()
+{
+  QString q_str;
+  if (solo_dashboard_node_->solo_test_onoff_ == true) {
     q_str = "on";
   } else {
     q_str = "off";
@@ -157,6 +170,16 @@ void SoloDashboard::set_sub_on()
 void SoloDashboard::set_sub_off()
 {
   solo_dashboard_node_->sub_onoff_ = false;
+}
+
+void SoloDashboard::set_solo_test_on()
+{
+  solo_dashboard_node_->solo_test_onoff_ = true;
+}
+
+void SoloDashboard::set_solo_test_off()
+{
+  solo_dashboard_node_->solo_test_onoff_ = false;
 }
 
 void SoloDashboard::press_f_button()

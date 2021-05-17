@@ -13,6 +13,7 @@
 #include <QStringListModel>
 
 #include <geometry_msgs/Twist.h>
+#include <ipab_controller_msgs/EffortFeedforwardWithJointFeedback.h>
 #include <ros/ros.h>
 #include <std_msgs/String.h>
 
@@ -26,8 +27,9 @@ public:
   RosNode();
   ~RosNode() {}
 
-  bool pub_onoff_ = true;
+  bool pub_onoff_ = false;
   bool sub_onoff_ = false;
+  bool solo_test_onoff_ = true;
   double lin_vel_ = 0.0;
   double ang_vel_ = 0.0;
 
@@ -39,6 +41,7 @@ private:
   ros::Subscriber chatter_sub_;
   void chatter_callback(const std_msgs::String::ConstPtr &msg);
   ros::Publisher cmd_vel_pub_;
+  ros::Publisher solo_test_pub_;
   ros::Timer timer_;
   void timer_callback(const ros::TimerEvent& te);
 };

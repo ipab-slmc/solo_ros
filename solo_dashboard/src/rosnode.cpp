@@ -31,6 +31,8 @@ RosNode::RosNode()
   chatter_pub_ = nh_.advertise<std_msgs::String>("chatter", 10);
   chatter_sub_ = nh_.subscribe("chatter", 10, &RosNode::chatter_callback, this);
   cmd_vel_pub_ = nh_.advertise<geometry_msgs::Twist>("cmd_vel", 10);
+  solo_test_pub_ = nh_.advertise<ipab_controller_msgs::EffortFeedforwardWithJointFeedback>(
+    "joint_cmd", 10);
 
   // Initialize ROS timer
   timer_ = nh_.createTimer(ros::Duration(0.01), &RosNode::timer_callback, this);
@@ -49,10 +51,13 @@ void RosNode::timer_callback(const ros::TimerEvent& te)
     count++;
   }
 
-  auto msg2 = geometry_msgs::Twist();
+  auto cmd_vel_msg = geometry_msgs::Twist();
   msg2.linear.x = lin_vel_;
   msg2.angular.z = ang_vel_;
-  cmd_vel_pub_.publish(msg2);
+  cmd_vel_pub_.publish(cmd_vel_msg);
+
+  // auto joint_cmd_msg = ipab_controller_msgs::EffortFeedforwardWithJointFeedback();
+  // solo_test_pub_.publish(joint_cmd_msg);
 }
 
 void RosNode::chatter_callback(const std_msgs::String::ConstPtr & msg)

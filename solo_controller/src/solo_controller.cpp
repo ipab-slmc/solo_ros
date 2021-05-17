@@ -131,7 +131,6 @@ void SoloController::update(const ros::Time & time, const ros::Duration & period
   // Send effort command to motors
   for (size_t i = 0; i < joint_size_; i++) {
     // Notice: eff_cmd will diverge if you don't give pos_ref, vel_ref, eff_ref.
-    // joint_handle_[i].setCommand(0.0);
     joint_handle_[i].setCommand(eff_cmd_[i]);
     // ROS_INFO("%d joint command: %lf", i, eff_cmd_[i]);
   }

@@ -44,8 +44,9 @@ private:
   QTimer * ros_timer_;
   QTimer * display_timer_;
 
-  QString get_pub_onff();
-  QString get_sub_onff();
+  QString get_pub_onoff();
+  QString get_sub_onoff();
+  QString get_solo_test_onoff();
 
 private slots:
   void ros_timer_callback();
@@ -55,9 +56,8 @@ private slots:
   void set_pub_off();
   void set_sub_on();
   void set_sub_off();
-
-  void press_button_1_1();
-  void press_button_1_2();
+  void set_solo_test_on();
+  void set_solo_test_off();
   void press_button_2_1();
   void press_button_2_2();
   void press_button_3_1();
