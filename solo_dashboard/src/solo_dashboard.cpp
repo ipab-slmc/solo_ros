@@ -21,7 +21,7 @@ namespace solo_dashboard
 SoloDashboard::SoloDashboard()
 : rqt_gui_cpp::Plugin(),
   widget_(0),
-  solo_dashboard_node_(std::make_shared<solo_dashboard::SoloDashboardNode>())
+  solo_dashboard_node_(std::make_shared<solo_dashboard::RosNode>())
 {
   setObjectName("Solo Dashboard");
 }
@@ -106,7 +106,7 @@ void SoloDashboard::restoreSettings(
 
 void SoloDashboard::ros_timer_callback()
 {
-  rclcpp::spin_some(solo_dashboard_node_);
+  ros::spinOnce();
 }
 
 void SoloDashboard::display_timer_callback()

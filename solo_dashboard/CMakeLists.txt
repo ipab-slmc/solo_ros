@@ -3,6 +3,8 @@ project(solo_dashboard)
 
 add_compile_options(-std=c++11)
 
+# TODO(JaehyunShim): Check how catkin works and rewrite CMakeLists.txt file
+
 # Find dependencies
 set(dependencies
   geometry_msgs
@@ -24,7 +26,7 @@ catkin_package(
 # Build
 include_directories(
   include
-  ${${PROJECT_NAME}_INCLUDE_DIRECTORIES}
+  ${CMAKE_CURRENT_BINARY_DIR}
   ${catkin_INCLUDE_DIRS}
 )
 

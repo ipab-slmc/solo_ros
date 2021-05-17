@@ -40,7 +40,7 @@ private:
   void chatter_callback(const std_msgs::String::ConstPtr &msg);
   ros::Publisher cmd_vel_pub_;
   ros::Timer timer_;
-  void timer_callback();
+  void timer_callback(const ros::TimerEvent& te);
 };
 }  // namespace solo_dashboard
 #endif  // SOLO_DASHBOARD__ROSNODE_HPP_

@@ -33,10 +33,10 @@ RosNode::RosNode()
   chatter_pub_ = nh_.advertise<geometry_msgs::Twist>("cmd_vel", 10);
 
   // Initialize ROS timer
-  timer_ = nh_.createTimer(ros::Duration(0.01), &RosNode::timer_callback);
+  timer_ = nh_.createTimer(ros::Duration(0.01), &RosNode::timer_callback, this);
 }
 
-void RosNode::timer_callback()
+void RosNode::timer_callback(const ros::TimerEvent& te)
 {
   static int count = 0;
   if (pub_onoff_ == true) {
