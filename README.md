@@ -19,7 +19,7 @@ $ roslaunch
 $ roslaunch solo_gazebo solo.launch
 
 # Rviz
-$ roslaunch solo_description rviz.launch
+$ roslaunch solo_description solo_rviz.launch
 
 # Dashboard
 $ rqt
