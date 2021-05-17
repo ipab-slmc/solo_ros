@@ -7,14 +7,12 @@
 //
 //
 
-#include <controller_interface/multi_interface_controller.h>
-#include <hardware_interface/imu_sensor_interface.h>
+#include <controller_interface/controller.h>
 #include <hardware_interface/joint_command_interface.h>
 #include <ipab_controller_msgs/EffortFeedforwardWithJointFeedback.h>
 #include <realtime_tools/realtime_buffer.h>
 #include <realtime_tools/realtime_publisher.h>
 #include <ros/ros.h>
-#include <sensor_msgs/Imu.h>
 #include <sensor_msgs/JointState.h>
 
 #include <memory>
@@ -26,19 +24,14 @@
 
 namespace solo_controller
 {
-class SoloController : public controller_interface::MultiInterfaceController<
-  hardware_interface::JointStateInterface,  // Rewrite
-  hardware_interface::PositionJointInterface,
-  hardware_interface::VelocityJointInterface,
-  hardware_interface::EffortJointInterface,
-  hardware_interface::ImuSensorInterface>
+class SoloController : public controller_interface::Controller<hardware_interface::EffortJointInterface>
 {
 public:
   SoloController() {}
   ~SoloController() {}
 
   bool init(
-    hardware_interface::RobotHW * robot_hw,
+    hardware_interface::EffortJointInterface * robot_hw,
     ros::NodeHandle & root_nh,
     ros::NodeHandle & controller_nh);
   void starting(const ros::Time & time);
@@ -55,7 +48,6 @@ private:
   std::vector<hardware_interface::JointHandle> joint_handle_;
   std::vector<double> kp_;
   std::vector<double> kd_;
-  // TODO(JaehyunShim): Check if using std::vector for joint data is ok
   std::vector<double> pos_curr_;
   std::vector<double> vel_curr_;
   std::vector<double> pos_prev_;
@@ -65,13 +57,8 @@ private:
   std::vector<double> eff_ref_;
   std::vector<double> eff_cmd_;
 
-  // IMU
-  std::string imu_name_;
-  hardware_interface::ImuSensorHandle imu_handle_;
-
   // ROS Publishers
   std::shared_ptr<realtime_tools::RealtimePublisher<sensor_msgs::JointState>> rt_joint_state_pub_;
-  std::shared_ptr<realtime_tools::RealtimePublisher<sensor_msgs::Imu>> rt_imu_pub_;
 
   // ROS Subscribers
   realtime_tools::RealtimeBuffer<ipab_controller_msgs::EffortFeedforwardWithJointFeedback>

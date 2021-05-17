@@ -13,24 +13,10 @@ namespace solo_controller
 {
 // https://github.com/ros-controls/ros_controllers/blob/noetic-devel/four_wheel_steering_controller/src/four_wheel_steering_controller.cpp
 bool SoloController::init(
-  hardware_interface::RobotHW * robot_hw,
+  hardware_interface::EffortJointInterface * hw,
   ros::NodeHandle & root_nh,
   ros::NodeHandle & controller_nh)
 {
-  // Joint HWInterface
-  hardware_interface::PositionJointInterface * const pos_joint_hw =
-    robot_hw->get<hardware_interface::PositionJointInterface>();
-  hardware_interface::VelocityJointInterface * const vel_joint_hw =
-    robot_hw->get<hardware_interface::VelocityJointInterface>();
-  hardware_interface::EffortJointInterface * const eff_joint_hw =    // TODO(JaehyunShim): Has to be command!!!
-    robot_hw->get<hardware_interface::EffortJointInterface>();
-
-  // IMU HWInterface
-  // https://github.com/PR2/pr2_common/tree/melodic-devel/pr2_description/urdf/sensors
-  // TODO(JaehyunShim): Get IMU data using the ros_control framework
-  hardware_interface::ImuSensorInterface * const imu_hw =
-    robot_hw->get<hardware_interface::ImuSensorInterface>();
-
   // TODO(JaehyunShim): Check if exception throwing is needed
   controller_nh.getParam("joint", joint_name_);
   joint_size_ = joint_name_.size();
@@ -38,7 +24,6 @@ bool SoloController::init(
     controller_nh.getParam("gain/" + joint_name_[i] + "/pid/p", kp_[i]);
     controller_nh.getParam("gain/" + joint_name_[i] + "/pid/d", kd_[i]);
   }
-  controller_nh.getParam("imu", imu_name_);
 
   // Resize joint data vectors
   for (size_t i = 0; i < joint_size_; i++) {
@@ -55,21 +40,11 @@ bool SoloController::init(
   // Joint Handle
   for (size_t i = 0; i < joint_size_; i++) {
     try {
-      joint_handle_.emplace_back(eff_joint_hw->getHandle(joint_name_[i]));
+      joint_handle_.emplace_back(hw->getHandle(joint_name_[i]));
     } catch (const hardware_interface::HardwareInterfaceException & e) {
       ROS_ERROR_STREAM("Error: " << e.what());
       return false;
     }
-  }
-
-  // IMU Handle
-  // TODO(JaehyunShim): Check if multiple imu sensors should be considered.
-  // If yes, change to multiple (same as joint)
-  try {
-    imu_handle_ = imu_hw->getHandle(imu_name_);
-  } catch (const hardware_interface::HardwareInterfaceException & e) {
-    ROS_ERROR_STREAM("Error: " << e.what());
-    return false;
   }
 
   // Initialize ROS publishers
@@ -77,9 +52,6 @@ bool SoloController::init(
   rt_joint_state_pub_.reset(
     new realtime_tools::RealtimePublisher<sensor_msgs::JointState>(
       controller_nh, "joint_states", 10));
-  rt_imu_pub_.reset(
-    new realtime_tools::RealtimePublisher<sensor_msgs::Imu>(
-      controller_nh, "imu", 10));
 
   // Initialize ROS subscribers
   // TODO(JaehyunShim): Need more consideration on the queue size
@@ -114,21 +86,6 @@ void SoloController::update(const ros::Time & time, const ros::Duration & period
     update_onoff = true;
     return;
   }
-
-  // Get IMU data
-  // TODO(Jaehyun): Add more imu data if needed
-  // Only added angular velocity and linear acceleration without much background knowledge
-  // after checking Fig2 from https://arxiv.org/pdf/1909.06586.pdf
-  // Useful future reference: https://github.com/ros-controls/ros_controllers/blob/noetic-devel/imu_sensor_controller/src/imu_sensor_controller.cpp
-  geometry_msgs::Vector3 ang_vel;
-  ang_vel.x = imu_handle_.getAngularVelocity()[0];
-  ang_vel.y = imu_handle_.getAngularVelocity()[1];
-  ang_vel.z = imu_handle_.getAngularVelocity()[2];
-
-  geometry_msgs::Vector3 lin_acc;
-  lin_acc.x = imu_handle_.getLinearAcceleration()[0];
-  lin_acc.y = imu_handle_.getLinearAcceleration()[1];
-  lin_acc.z = imu_handle_.getLinearAcceleration()[2];
 
   // Get reference position, velocity, effort from the planner
   ipab_controller_msgs::EffortFeedforwardWithJointFeedback joint_cmd_buffer =
@@ -168,15 +125,6 @@ void SoloController::update(const ros::Time & time, const ros::Duration & period
     rt_joint_state_pub_->msg_.position = pos_curr_;
     rt_joint_state_pub_->msg_.velocity = vel_curr_;
     rt_joint_state_pub_->unlockAndPublish();
-  }
-
-  // Publish imu data
-  if (rt_imu_pub_->trylock()) {
-    rt_imu_pub_->msg_.header.stamp = curr_time;
-    rt_imu_pub_->msg_.header.frame_id = imu_handle_.getFrameId();
-    rt_imu_pub_->msg_.angular_velocity = ang_vel;
-    rt_imu_pub_->msg_.linear_acceleration = lin_acc;
-    rt_imu_pub_->unlockAndPublish();
   }
 }
 

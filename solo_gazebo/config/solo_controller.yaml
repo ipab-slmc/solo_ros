@@ -47,4 +47,3 @@ solo_controller:
       pid: {p: 100.0, i: 0, d: 20.0, i_clamp: 0, antiwindup: false}
     HR_KFE:
       pid: {p: 100.0, i: 0, d: 20.0, i_clamp: 0, antiwindup: false}
-  imu: imu
