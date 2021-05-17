@@ -22,7 +22,9 @@ $ roslaunch solo_gazebo solo.launch
 $ roslaunch solo_description solo_rviz.launch
 
 # Dashboard
+$ roscore
 $ rqt
+(Plugin tab -> _Robot Dashboard_ -> Solo Dashboard)
 ```
 
 # Issue

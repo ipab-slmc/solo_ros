@@ -30,7 +30,7 @@ RosNode::RosNode()
   // TODO(JaehyunShim): more consideration on queue size
   chatter_pub_ = nh_.advertise<std_msgs::String>("chatter", 10);
   chatter_sub_ = nh_.subscribe("chatter", 10, &RosNode::chatter_callback, this);
-  chatter_pub_ = nh_.advertise<geometry_msgs::Twist>("cmd_vel", 10);
+  cmd_vel_pub_ = nh_.advertise<geometry_msgs::Twist>("cmd_vel", 10);
 
   // Initialize ROS timer
   timer_ = nh_.createTimer(ros::Duration(0.01), &RosNode::timer_callback, this);
