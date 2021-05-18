@@ -75,8 +75,9 @@ bool SoloController::init(
 
   // Dynamic reconfigure for PD gains
   // Reference: https://github.com/ros-controls/control_toolbox/blob/melodic-devel/src/pid.cpp
-  dyn_reconf_server_ = std::make_shared<dynamic_reconfigure::Server<solo_controller::SoloControllerConfig>>(dyn_reconf_mutex_, controller_nh);
-
+  std::string nh_ns = controller_nh.getNamespace() + "/gain/" + joint_name_[0] + "/pid";
+  ros::NodeHandle nh(nh_ns);  // Node handle for dynamic reconfigure
+  dyn_reconf_server_ = std::make_shared<dynamic_reconfigure::Server<solo_controller::SoloControllerConfig>>(dyn_reconf_mutex_, nh);
   solo_controller::SoloControllerConfig solo_controller_config;
   solo_controller_config.p  = kp_[0];
   solo_controller_config.d = kd_[0];
