@@ -44,7 +44,6 @@ int main(int argc, char * argv[])
   spinner.start();
 
   // https://github.com/doosan-robotics/doosan-robot/blob/master/dsr_control/src/dsr_control_node.cpp#L73
-  // https://github.com/ROBOTIS-SYS/aimbot_base/blob/d32fe11eac74f0f91f8ba814ab9983e253e4833c/aimbot_hw/src/control_node.cpp
   signal(SIGINT, active_handler);
   ros::Rate r(1000);  // 1000[Hz]
   last_time = ros::Time::now();

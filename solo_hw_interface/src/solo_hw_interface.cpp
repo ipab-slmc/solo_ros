@@ -31,20 +31,18 @@ bool SoloHwInterface::init(ros::NodeHandle & root_nh, ros::NodeHandle & robot_hw
 
   joint_size_ = joint_name_.size();
   for (size_t i = 0; i < joint_size_; i++) {
-    printf("Joint %d name: %s \n", i, joint_name_[i].c_str());
+    printf("Joint name: %s \n", joint_name_[i].c_str());
   }
-
-  // Init robot driver
-  solo_driver_ = std::make_shared<solo_driver::SoloDriver>();
-  solo_driver_->init(joint_size_);
-
-  // https://github.com/ROBOTIS-SYS/aimbot_base/blob/d32fe11eac74f0f91f8ba814ab9983e253e4833c/aimbot_hw/src/hardware_interface.cpp
   pos_.resize(joint_size_);
   vel_.resize(joint_size_);
   eff_.resize(joint_size_);
   pos_cmd_.resize(joint_size_);
   vel_cmd_.resize(joint_size_);
   eff_cmd_.resize(joint_size_);
+
+  // Init robot driver
+  solo_driver_ = std::make_shared<solo_driver::SoloDriver>();
+  solo_driver_->init(joint_size_);
 
   // TODO(JaehyunShim): Reference
   // Reference: https://github.com/ros-simulation/gazebo_ros_pkgs/blob/kinetic-devel/gazebo_ros_control/src/default_robot_hw_sim.cpp
