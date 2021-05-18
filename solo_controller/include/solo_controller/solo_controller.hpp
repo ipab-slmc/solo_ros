@@ -75,12 +75,12 @@ private:
   }
 
   // ROS Dynamic Reconfigure Server
-  std::shared_ptr<dynamic_reconfigure::Server<solo_controller::SoloControllerConfig>> dyn_reconf_server_;
+  std::vector<std::shared_ptr<dynamic_reconfigure::Server<solo_controller::SoloControllerConfig>>> dyn_reconf_server_;
   boost::recursive_mutex dyn_reconf_mutex_;
-  realtime_tools::RealtimeBuffer<solo_controller::SoloControllerConfig> solo_controller_config_;
-  void dyn_reconf_callback(solo_controller::SoloControllerConfig & solo_controller_config, uint32_t /*level*/)
+  std::vector<realtime_tools::RealtimeBuffer<solo_controller::SoloControllerConfig>> solo_controller_config_;
+  void dyn_reconf_callback(solo_controller::SoloControllerConfig & solo_controller_config, uint32_t /*level*/, uint8_t joint_num)
   {
-    solo_controller_config_.writeFromNonRT(solo_controller_config);
+    solo_controller_config_[joint_num].writeFromNonRT(solo_controller_config);  // TODO(JaehyunShim): Any better naming than joint_num?
   }
 };
 }  // namespace solo_controller

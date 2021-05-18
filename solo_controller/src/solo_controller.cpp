@@ -75,17 +75,25 @@ bool SoloController::init(
 
   // Dynamic reconfigure for PD gains
   // Reference: https://github.com/ros-controls/control_toolbox/blob/melodic-devel/src/pid.cpp
-  std::string nh_ns = controller_nh.getNamespace() + "/gain/" + joint_name_[0] + "/pid";
-  ros::NodeHandle nh(nh_ns);  // Node handle for dynamic reconfigure
-  dyn_reconf_server_ = std::make_shared<dynamic_reconfigure::Server<solo_controller::SoloControllerConfig>>(dyn_reconf_mutex_, nh);
-  solo_controller::SoloControllerConfig solo_controller_config;
-  solo_controller_config.p  = kp_[0];
-  solo_controller_config.d = kd_[0];
-  dyn_reconf_mutex_.lock();
-  dyn_reconf_server_->updateConfig(solo_controller_config);
-  dyn_reconf_mutex_.unlock();
+  for (size_t i = 0; i < joint_size_; i++) {
+    std::string dyn_reconf_nh_ns = controller_nh.getNamespace() + "/gain/" + joint_name_[i] + "/pid";
+    ros::NodeHandle dyn_reconf_nh(dyn_reconf_nh_ns);
+    dyn_reconf_server_.emplace_back(std::make_shared<dynamic_reconfigure::Server<solo_controller::SoloControllerConfig>>(dyn_reconf_mutex_, dyn_reconf_nh));
+  }
+  solo_controller_config_.resize(joint_size_);
 
-  dyn_reconf_server_->setCallback(boost::bind(&SoloController::dyn_reconf_callback, this, _1, _2));
+  solo_controller::SoloControllerConfig solo_controller_config;
+  for (size_t i = 0; i < joint_size_; i++) {
+    // Set init param values
+    solo_controller_config.p  = kp_[i];
+    solo_controller_config.d = kd_[i];
+    dyn_reconf_mutex_.lock();
+    dyn_reconf_server_[i]->updateConfig(solo_controller_config);
+    dyn_reconf_mutex_.unlock();
+
+    // Set server callback
+    dyn_reconf_server_[i]->setCallback(boost::bind(&SoloController::dyn_reconf_callback, this, _1, _2, i));
+  }
 
   return true;
 }
@@ -156,11 +164,11 @@ void SoloController::update(const ros::Time & time, const ros::Duration & period
   }
 
   // Update parameters
-  solo_controller::SoloControllerConfig solo_controller_config = *(solo_controller_config_.readFromRT());
-  kp_[0] = solo_controller_config.p;
-  kd_[0] = solo_controller_config.d;
-  ROS_INFO("%d joint kp: %lf", 0, kp_[0]);
-  ROS_INFO("%d joint kd: %lf", 0, kd_[0]);
+  for (size_t i = 0; i < joint_size_; i++) {
+    solo_controller::SoloControllerConfig solo_controller_config = *(solo_controller_config_[i].readFromRT());
+    kp_[i] = solo_controller_config.p;
+    kd_[i] = solo_controller_config.d;
+  }
 }
 
 void SoloController::stopping(const ros::Time & /*time*/) {}
