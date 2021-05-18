@@ -20,6 +20,6 @@
   <depend>xacro</depend>
 
   <export>
-    <gazebo_ros gazebo_model_path="${prefix}/../"/>  <!-- TODO(JaehyunShim): How are they going to be used in gazebo? -->
+    <gazebo_ros gazebo_model_path="${prefix}/../"/>
   </export>
 </package>

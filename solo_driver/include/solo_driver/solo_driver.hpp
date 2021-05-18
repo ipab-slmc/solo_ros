@@ -15,6 +15,7 @@
 #include <ros/ros.h>
 
 #include <memory>
+#include <vector>
 
 // Reference: https://github.com/open-dynamic-robot-initiative/solo/blob/master/src/solo12.cpp
 

@@ -71,15 +71,18 @@ private:
   void joint_cmd_callback(
     const ipab_controller_msgs::EffortFeedforwardWithJointFeedback::ConstPtr & msg)
   {
-    // TODO(JaehyunShim): Check if the type of the input *msg is correct
     joint_cmd_buffer_.writeFromNonRT(*msg);
   }
 
   // ROS Dynamic Reconfigure Server
-  std::vector<std::shared_ptr<dynamic_reconfigure::Server<solo_controller::SoloControllerConfig>>> dyn_reconf_server_;
+  std::vector<std::shared_ptr<dynamic_reconfigure::Server<solo_controller::SoloControllerConfig>>>
+  dyn_reconf_server_;
   boost::recursive_mutex dyn_reconf_mutex_;
-  std::vector<realtime_tools::RealtimeBuffer<solo_controller::SoloControllerConfig>> solo_controller_config_;
-  void dyn_reconf_callback(solo_controller::SoloControllerConfig & solo_controller_config, uint32_t /*level*/, uint8_t index)
+  std::vector<realtime_tools::RealtimeBuffer<solo_controller::SoloControllerConfig>>
+  solo_controller_config_;
+  void dyn_reconf_callback(
+    solo_controller::SoloControllerConfig & solo_controller_config,
+    uint32_t /*level*/, uint8_t index)
   {
     solo_controller_config_[index].writeFromNonRT(solo_controller_config);
   }
@@ -88,7 +91,9 @@ private:
   std::vector<urdf::JointConstSharedPtr> joint_urdf_;
   void enforce_joint_limit(double & cmd, uint8_t index)
   {
-    if (joint_urdf_[index]->type == urdf::Joint::REVOLUTE || joint_urdf_[index]->type == urdf::Joint::PRISMATIC) {
+    if (joint_urdf_[index]->type == urdf::Joint::REVOLUTE ||
+      joint_urdf_[index]->type == urdf::Joint::PRISMATIC)
+    {
       if (std::abs(cmd) > joint_urdf_[index]->limits->effort) {
         cmd = joint_urdf_[index]->limits->effort * (cmd / std::abs(cmd));
       }

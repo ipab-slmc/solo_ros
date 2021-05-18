@@ -22,7 +22,7 @@ include_directories(
 
 add_library(${PROJECT_NAME}
   src/solo_driver.cpp)
-add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS}) # ${${PROJECT_NAME}_EXPORTED_TARGETS})
+add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS}) # TODO(JaehyunShim): ${${PROJECT_NAME}_EXPORTED_TARGETS})
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 
 # Install

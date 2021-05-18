@@ -18,7 +18,7 @@
       <updateRate>1000</updateRate>
       <bodyName>base_link</bodyName>
       <topicName>imu</topicName>
-      <serviceName>imu_service</serviceName>  <!-- TODO(JaehyunShim): Check what this service for -->
+      <serviceName>imu_service</serviceName>  <!-- TODO(JaehyunShim): Check what this service is for -->
       <gaussianNoise>0.0</gaussianNoise>
       <xyzOffset>0 0 0</xyzOffset>
       <rpyOffset>0 0 0</rpyOffset>

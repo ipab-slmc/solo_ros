@@ -27,11 +27,9 @@ int main(int argc, char * argv[])
   ros::NodeHandle root_nh("");
   ros::NodeHandle robot_hw_nh("~");
 
-  // TODO(JaehyunShim): Rewrite hw_interface instantiation
   solo_hw_interface::SoloHwInterface hw_interface(root_nh, robot_hw_nh);
   controller_manager::ControllerManager cm(&hw_interface, root_nh);
 
-  // Init HW interface
   if (!hw_interface.init(root_nh, robot_hw_nh)) {
     return -1;
   }
@@ -43,7 +41,7 @@ int main(int argc, char * argv[])
   ros::AsyncSpinner spinner(1);
   spinner.start();
 
-  // https://github.com/doosan-robotics/doosan-robot/blob/master/dsr_control/src/dsr_control_node.cpp#L73
+  // Reference: https://github.com/doosan-robotics/doosan-robot/blob/master/dsr_control/src/dsr_control_node.cpp#L73
   signal(SIGINT, active_handler);
   ros::Rate r(1000);  // 1000[Hz]
   last_time = ros::Time::now();

@@ -7,6 +7,11 @@
 //
 //
 
+#include <pluginlib/class_list_macros.hpp>
+
+#include <string>
+#include <memory>
+
 #include "solo_controller/solo_controller.hpp"
 
 namespace solo_controller
@@ -34,7 +39,7 @@ bool SoloController::init(
     eff_cmd_.emplace_back(0.0);
   }
 
-  // Get p, d gains from parameter server
+  // Get PD gains from parameter server
   for (size_t i = 0; i < joint_size_; i++) {
     controller_nh.getParam("gain/" + joint_name_[i] + "/pid/p", kp_[i]);
     controller_nh.getParam("gain/" + joint_name_[i] + "/pid/d", kd_[i]);
@@ -76,23 +81,28 @@ bool SoloController::init(
   // Dynamic reconfigure for PD gains
   // Reference: https://github.com/ros-controls/control_toolbox/blob/melodic-devel/src/pid.cpp
   for (size_t i = 0; i < joint_size_; i++) {
-    std::string dyn_reconf_nh_ns = controller_nh.getNamespace() + "/gain/" + joint_name_[i] + "/pid";
+    std::string dyn_reconf_nh_ns =
+      controller_nh.getNamespace() + "/gain/" + joint_name_[i] + "/pid";
     ros::NodeHandle dyn_reconf_nh(dyn_reconf_nh_ns);
-    dyn_reconf_server_.emplace_back(std::make_shared<dynamic_reconfigure::Server<solo_controller::SoloControllerConfig>>(dyn_reconf_mutex_, dyn_reconf_nh));
+    dyn_reconf_server_.emplace_back(
+      std::make_shared<dynamic_reconfigure::Server<solo_controller::SoloControllerConfig>>(
+        dyn_reconf_mutex_, dyn_reconf_nh));
   }
   solo_controller_config_.resize(joint_size_);
 
   solo_controller::SoloControllerConfig solo_controller_config;
   for (size_t i = 0; i < joint_size_; i++) {
     // Set init param values
-    solo_controller_config.p  = kp_[i];
+    solo_controller_config.p = kp_[i];
     solo_controller_config.d = kd_[i];
     dyn_reconf_mutex_.lock();
     dyn_reconf_server_[i]->updateConfig(solo_controller_config);
     dyn_reconf_mutex_.unlock();
 
     // Set server callback
-    dyn_reconf_server_[i]->setCallback(boost::bind(&SoloController::dyn_reconf_callback, this, _1, _2, i));
+    dyn_reconf_server_[i]->setCallback(
+      boost::bind(
+        &SoloController::dyn_reconf_callback, this, _1, _2, i));
   }
 
   // URDF parsing for enforcing joint limit
@@ -179,7 +189,8 @@ void SoloController::update(const ros::Time & time, const ros::Duration & period
 
   // Update parameters
   for (size_t i = 0; i < joint_size_; i++) {
-    solo_controller::SoloControllerConfig solo_controller_config = *(solo_controller_config_[i].readFromRT());
+    solo_controller::SoloControllerConfig solo_controller_config =
+      *(solo_controller_config_[i].readFromRT());
     kp_[i] = solo_controller_config.p;
     kd_[i] = solo_controller_config.d;
     // ROS_INFO("%d joint kp_: %lf", i, kp_[i]);
@@ -191,5 +202,4 @@ void SoloController::stopping(const ros::Time & /*time*/) {}
 
 }  // namespace solo_controller
 
-#include <pluginlib/class_list_macros.hpp>
 PLUGINLIB_EXPORT_CLASS(solo_controller::SoloController, controller_interface::ControllerBase)

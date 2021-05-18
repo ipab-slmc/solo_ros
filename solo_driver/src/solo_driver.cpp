@@ -10,6 +10,7 @@
 #include <solo_driver/solo_driver.hpp>
 
 #include <memory>
+#include <vector>
 
 namespace solo_driver
 {

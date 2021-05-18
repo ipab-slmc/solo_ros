@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
+  <!-- Upload floating robot_description parameter to parameter server -->
   <param name="robot_description"
     command="$(find xacro)/xacro --inorder '$(find solo_description)/urdf/solo12_fixed.robot.xacro'"/>
 </launch>

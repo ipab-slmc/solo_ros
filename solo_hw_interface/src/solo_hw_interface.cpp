@@ -7,7 +7,10 @@
 //
 //
 
+#include <map>
 #include <memory>
+#include <string>
+#include <utility>
 
 #include "solo_hw_interface/solo_hw_interface.hpp"
 
@@ -22,7 +25,9 @@ bool SoloHwInterface::init(ros::NodeHandle & root_nh, ros::NodeHandle & robot_hw
     return false;
   }
 
-  for(std::map<std::string, std::shared_ptr<urdf::Joint>>::iterator i = urdf.joints_.begin(); i != urdf.joints_.end(); i++) {
+  for (std::map<std::string, std::shared_ptr<urdf::Joint>>::iterator i = urdf.joints_.begin();
+    i != urdf.joints_.end(); i++)
+  {
     std::shared_ptr<urdf::Joint> joint_urdf = i->second;
     if (joint_urdf->type == urdf::Joint::REVOLUTE) {
       joint_name_.emplace_back(i->first);
@@ -44,7 +49,6 @@ bool SoloHwInterface::init(ros::NodeHandle & root_nh, ros::NodeHandle & robot_hw
   solo_driver_ = std::make_shared<solo_driver::SoloDriver>();
   solo_driver_->init(joint_size_);
 
-  // TODO(JaehyunShim): Reference
   // Reference: https://github.com/ros-simulation/gazebo_ros_pkgs/blob/kinetic-devel/gazebo_ros_control/src/default_robot_hw_sim.cpp
   for (size_t i = 0; i < joint_size_; i++) {
     // Register joint state handle
@@ -89,7 +93,6 @@ void SoloHwInterface::read()
 void SoloHwInterface::write()
 {
   // TODO(JaehyunShim): Add a feature for switching between pos, vel, eff
-  // Should not use std::move() as eff_cmd_ should not be removed
   solo_driver_->write_joint(eff_cmd_);  // maybe better name it to write_joint_cmd
 }
 
