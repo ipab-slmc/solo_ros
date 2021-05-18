@@ -18,7 +18,6 @@ solo_controller:
     - HR_HFE
     - HR_KFE
   gain:
-    # TODO(JaehyunShim): How to use dynamic reconfigure
     # TODO(JaehyunShim): Temporarily set random pid gains. Rewrite.
     # Front Left
     FL_HAA:

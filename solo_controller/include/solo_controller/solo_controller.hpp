@@ -8,12 +8,14 @@
 //
 
 #include <controller_interface/controller.h>
+#include <dynamic_reconfigure/server.h>
 #include <hardware_interface/joint_command_interface.h>
 #include <ipab_controller_msgs/EffortFeedforwardWithJointFeedback.h>
 #include <realtime_tools/realtime_buffer.h>
 #include <realtime_tools/realtime_publisher.h>
 #include <ros/ros.h>
 #include <sensor_msgs/JointState.h>
+#include <solo_controller/SoloControllerConfig.h>
 
 #include <memory>
 #include <string>
@@ -58,10 +60,10 @@ private:
   std::vector<double> eff_ref_;
   std::vector<double> eff_cmd_;
 
-  // ROS Publishers
+  // ROS Publisher
   std::shared_ptr<realtime_tools::RealtimePublisher<sensor_msgs::JointState>> rt_joint_state_pub_;
 
-  // ROS Subscribers
+  // ROS Subscriber
   realtime_tools::RealtimeBuffer<ipab_controller_msgs::EffortFeedforwardWithJointFeedback>
   joint_cmd_buffer_;
   ros::Subscriber joint_cmd_sub_;
@@ -70,6 +72,22 @@ private:
   {
     // TODO(JaehyunShim): Check if the type of the input *msg is correct
     joint_cmd_buffer_.writeFromNonRT(*msg);
+  }
+
+  // ROS Dynamic Reconfigure Server
+  struct DynamicParams
+  {
+    double p;
+    double d;
+  };
+  // std::shared_ptr<dynamic_reconfigure::Server<std::vector<solo_controller::SoloControllerConfig>>> dyn_reconf_server_;
+  std::shared_ptr<dynamic_reconfigure::Server<solo_controller::SoloControllerConfig>> dyn_reconf_server_;
+  boost::recursive_mutex dyn_reconf_mutex_;
+  realtime_tools::RealtimeBuffer<solo_controller::SoloControllerConfig> solo_controller_config_;
+  // void dyn_reconf_callback(std::vector<solo_controller::SoloControllerConfig> & solo_controller_config, uint32_t /*level*/)
+  void dyn_reconf_callback(solo_controller::SoloControllerConfig & solo_controller_config, uint32_t /*level*/)
+  {
+    solo_controller_config_.writeFromNonRT(solo_controller_config);
   }
 };
 }  // namespace solo_controller

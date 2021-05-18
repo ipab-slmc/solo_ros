@@ -6,6 +6,7 @@ add_compile_options(-std=c++11)
 # Find dependencies
 set(dependencies
   controller_interface
+  dynamic_reconfigure
   hardware_interface
   ipab_controller_msgs
   pluginlib
@@ -13,6 +14,10 @@ set(dependencies
   sensor_msgs
 )
 find_package(catkin REQUIRED COMPONENTS ${dependencies})
+
+generate_dynamic_reconfigure_options(
+  config/SoloController.cfg
+)
 
 # Build
 include_directories(

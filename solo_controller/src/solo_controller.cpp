@@ -73,6 +73,19 @@ bool SoloController::init(
   }
   joint_cmd_buffer_.writeFromNonRT(joint_cmd_buffer);
 
+  // Dynamic reconfigure for PD gains
+  // Reference: https://github.com/ros-controls/control_toolbox/blob/melodic-devel/src/pid.cpp
+  dyn_reconf_server_ = std::make_shared<dynamic_reconfigure::Server<solo_controller::SoloControllerConfig>>(dyn_reconf_mutex_, controller_nh);
+
+  solo_controller::SoloControllerConfig solo_controller_config;
+  solo_controller_config.p  = kp_[0];
+  solo_controller_config.d = kd_[0];
+  dyn_reconf_mutex_.lock();
+  dyn_reconf_server_->updateConfig(solo_controller_config);
+  dyn_reconf_mutex_.unlock();
+
+  dyn_reconf_server_->setCallback(boost::bind(&SoloController::dyn_reconf_callback, this, _1, _2));
+
   return true;
 }
 
@@ -129,7 +142,7 @@ void SoloController::update(const ros::Time & time, const ros::Duration & period
   // Send effort command to motors
   for (size_t i = 0; i < joint_size_; i++) {
     joint_handle_[i].setCommand(eff_cmd_[i]);
-    ROS_INFO("%d joint command: %lf", i, eff_cmd_[i]);
+    // ROS_INFO("%d joint command: %lf", i, eff_cmd_[i]);
   }
 
   // Publish joint_state data
@@ -140,6 +153,13 @@ void SoloController::update(const ros::Time & time, const ros::Duration & period
     rt_joint_state_pub_->msg_.velocity = vel_curr_;
     rt_joint_state_pub_->unlockAndPublish();
   }
+
+  // Update parameters
+  solo_controller::SoloControllerConfig solo_controller_config = *(solo_controller_config_.readFromRT());
+  kp_[0] = solo_controller_config.p;
+  kd_[0] = solo_controller_config.d;
+  ROS_INFO("%d joint kp: %lf", 0, kp_[0]);
+  ROS_INFO("%d joint kd: %lf", 0, kd_[0]);
 }
 
 void SoloController::stopping(const ros::Time & /*time*/) {}

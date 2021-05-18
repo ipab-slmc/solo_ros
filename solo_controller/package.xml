@@ -14,6 +14,7 @@
   <buildtool_depend>catkin</buildtool_depend>
 
   <depend>controller_interface</depend>
+  <depend>dynamic_reconfigure</depend>
   <depend>hardware_interface</depend>
   <depend>ipab_controller_msgs</depend>
   <depend>pluginlib</depend>
