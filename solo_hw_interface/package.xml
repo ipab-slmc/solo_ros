@@ -16,5 +16,6 @@
   <depend>controller_manager</depend>
   <depend>hardware_interface</depend>
   <depend>solo_driver</depend>
+  <depend>urdf</depend>
 
 </package>

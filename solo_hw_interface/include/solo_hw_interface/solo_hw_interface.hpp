@@ -16,6 +16,7 @@
 #include <hardware_interface/robot_hw.h>
 #include <ros/ros.h>
 #include <solo_driver/solo_driver.hpp>
+#include <urdf/model.h>
 
 #include <memory>
 #include <string>
@@ -26,18 +27,14 @@ namespace solo_hw_interface
 class SoloHwInterface : public hardware_interface::RobotHW
 {
 public:
-  SoloHwInterface(ros::NodeHandle root_nh, ros::NodeHandle controller_nh);
+  SoloHwInterface(ros::NodeHandle & root_nh, ros::NodeHandle & robot_hw_nh) {}
   ~SoloHwInterface() {}
 
   bool init(ros::NodeHandle & root_nh, ros::NodeHandle & robot_hw_nh);
-  void read();  // hardware_interface::return_type ??
+  void read();
   void write();
 
 private:
-  // Node Handle
-  ros::NodeHandle root_nh_;
-  ros::NodeHandle controller_nh_;
-
   // Joint
   u_int8_t joint_size_;
   std::vector<std::string> joint_name_;
@@ -49,10 +46,10 @@ private:
   std::vector<double> eff_cmd_;
 
   // Interface
-  std::vector<hardware_interface::JointStateInterface> joint_state_interface_;
-  std::vector<hardware_interface::PositionJointInterface> pos_joint_interface_;
-  std::vector<hardware_interface::VelocityJointInterface> vel_joint_interface_;
-  std::vector<hardware_interface::EffortJointInterface> eff_joint_interface_;
+  hardware_interface::JointStateInterface joint_state_interface_;
+  hardware_interface::PositionJointInterface pos_joint_interface_;
+  hardware_interface::VelocityJointInterface vel_joint_interface_;
+  hardware_interface::EffortJointInterface eff_joint_interface_;
 
   // TODO(JaehyunShim): Check if joint_limit_interface needs to be added
   // Reference: https://github.com/ros-simulation/gazebo_ros_pkgs/blob/kinetic-devel/gazebo_ros_control/include/gazebo_ros_control/default_robot_hw_sim.h#L113

@@ -165,7 +165,7 @@ void SoloController::update(const ros::Time & time, const ros::Duration & period
   for (size_t i = 0; i < joint_size_; i++) {
     enforce_joint_limit(eff_cmd_[i], i);
     joint_handle_[i].setCommand(eff_cmd_[i]);
-    ROS_INFO("%d joint command: %lf", i, eff_cmd_[i]);
+    // ROS_INFO("%d joint command: %lf", i, eff_cmd_[i]);
   }
 
   // Publish joint_state data
@@ -182,8 +182,8 @@ void SoloController::update(const ros::Time & time, const ros::Duration & period
     solo_controller::SoloControllerConfig solo_controller_config = *(solo_controller_config_[i].readFromRT());
     kp_[i] = solo_controller_config.p;
     kd_[i] = solo_controller_config.d;
-    ROS_INFO("%d joint kp_: %lf", i, kp_[i]);
-    ROS_INFO("%d joint kd_: %lf", i, kd_[i]);
+    // ROS_INFO("%d joint kp_: %lf", i, kp_[i]);
+    // ROS_INFO("%d joint kd_: %lf", i, kd_[i]);
   }
 }
 

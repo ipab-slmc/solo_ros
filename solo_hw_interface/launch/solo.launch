@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+  <arg name="robot" default="solo"/>
+
+  <!-- Load fixed robot URDF -->
+  <include file="$(find solo_description)/launch/solo_upload.launch"/>
+
+  <!-- Start solo hardware control node -->
+  <node pkg="solo_hw_interface" type="solo_control_node" name="solo_control_node" output="screen"/>
+
+  <!-- Load parameters for controllers -->
+  <rosparam file="$(find solo_hw_interface)/config/solo_controller.yaml" command="load"/>
+
+  <!-- Spawn controllers -->
+  <node pkg="controller_manager" type="spawner" name="spawner" respawn="false" output="screen" args="solo_controller"/>
+</launch>

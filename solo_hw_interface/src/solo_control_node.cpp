@@ -25,17 +25,21 @@ int main(int argc, char * argv[])
   // Init
   ros::init(argc, argv, "solo_control_node");
   ros::NodeHandle root_nh("");
-  ros::NodeHandle controller_nh("~");  // For what?
+  ros::NodeHandle robot_hw_nh("~");
 
   // TODO(JaehyunShim): Rewrite hw_interface instantiation
-  solo_hw_interface::SoloHwInterface hw_interface(root_nh, controller_nh);
+  solo_hw_interface::SoloHwInterface hw_interface(root_nh, robot_hw_nh);
   controller_manager::ControllerManager cm(&hw_interface, root_nh);
 
+  // Init HW interface
+  if (!hw_interface.init(root_nh, robot_hw_nh)) {
+    return -1;
+  }
+
+  // Update
   ros::Time curr_time;
   ros::Time last_time;
   ros::Duration elapsed;
-
-  // Update
   ros::AsyncSpinner spinner(1);
   spinner.start();
 

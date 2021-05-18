@@ -8,6 +8,7 @@ set(dependencies
   controller_manager
   hardware_interface
   solo_driver
+  urdf
 )
 find_package(catkin REQUIRED COMPONENTS ${dependencies})
 
@@ -35,6 +36,10 @@ install(TARGETS solo_control_node
 
 install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+)
+
+install(DIRECTORY config launch
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
 # Test

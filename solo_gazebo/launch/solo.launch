@@ -35,7 +35,7 @@
      -J HR_HAA 0.0 -J HR_HFE 0.63 -J HR_KFE -1.25"/> -->
 
   <!-- Load parameters for controllers -->
-  <rosparam file="$(find solo_gazebo)/config/solo_controller.yaml" command="load"/>
+  <rosparam file="$(find solo_gazebo)/config/solo_controller_gazebo.yaml" command="load"/>
 
   <!-- Spawn controllers -->
   <node pkg="controller_manager" type="spawner" name="spawner" respawn="false" output="screen" args="solo_controller"/>
