@@ -18,32 +18,35 @@ solo_controller:
     - HR_HFE
     - HR_KFE
   gain:
-    # TODO(JaehyunShim): Temporarily set random pid gains. Rewrite.
+    # Dynamic reconfigure for PD gain parameters has been implemented in solo_controller.
+    # Use rqt_reconfigure to tune PD gains if needed.
+    # TODO(JaehyunShim): Check if PD gains for each leg can be the same
+    # Currently, PD gain can be tuned different for each motor (motor condition etc.)
     # Front Left
     FL_HAA:
-      pid: {p: 0.6, d: 0.1}
+      pid: {p: 1.6, d: 0.16}
     FL_HFE:
-      pid: {p: 0.6, d: 0.1}
+      pid: {p: 0.27, d: 0.027}
     FL_KFE:
-      pid: {p: 0.6, d: 0.1}
+      pid: {p: 0.19, d: 0.019}
     # Front Right
     FR_HAA:
-      pid: {p: 0.6, d: 0.1}
+      pid: {p: 1.6, d: 0.16}
     FR_HFE:
-      pid: {p: 0.6, d: 0.1}
+      pid: {p: 0.27, d: 0.027}
     FR_KFE:
-      pid: {p: 0.6, d: 0.1}
+      pid: {p: 0.19, d: 0.019}
     # Hind Left
     HL_HAA:
-      pid: {p: 0.6, d: 0.1}
+      pid: {p: 1.6, d: 0.16}
     HL_HFE:
-      pid: {p: 0.6, d: 0.1}
+      pid: {p: 0.27, d: 0.027}
     HL_KFE:
-      pid: {p: 0.6, d: 0.1}
+      pid: {p: 0.19, d: 0.019}
     # Hind Right
     HR_HAA:
-      pid: {p: 0.6, d: 0.1}
+      pid: {p: 1.6, d: 0.16}
     HR_HFE:
-      pid: {p: 0.6, d: 0.1}
+      pid: {p: 0.27, d: 0.027}
     HR_KFE:
-      pid: {p: 0.6, d: 0.1}
+      pid: {p: 0.19, d: 0.019}
