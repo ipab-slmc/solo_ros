@@ -16,6 +16,7 @@
 #include <ros/ros.h>
 #include <sensor_msgs/JointState.h>
 #include <solo_controller/SoloControllerConfig.h>
+#include <urdf/model.h>
 
 #include <memory>
 #include <string>
@@ -78,9 +79,20 @@ private:
   std::vector<std::shared_ptr<dynamic_reconfigure::Server<solo_controller::SoloControllerConfig>>> dyn_reconf_server_;
   boost::recursive_mutex dyn_reconf_mutex_;
   std::vector<realtime_tools::RealtimeBuffer<solo_controller::SoloControllerConfig>> solo_controller_config_;
-  void dyn_reconf_callback(solo_controller::SoloControllerConfig & solo_controller_config, uint32_t /*level*/, uint8_t joint_num)
+  void dyn_reconf_callback(solo_controller::SoloControllerConfig & solo_controller_config, uint32_t /*level*/, uint8_t index)
   {
-    solo_controller_config_[joint_num].writeFromNonRT(solo_controller_config);  // TODO(JaehyunShim): Any better naming than joint_num?
+    solo_controller_config_[index].writeFromNonRT(solo_controller_config);
+  }
+
+  // Joint limit enforcement
+  std::vector<urdf::JointConstSharedPtr> joint_urdf_;
+  void enforce_joint_limit(double & cmd, uint8_t index)
+  {
+    if (joint_urdf_[index]->type == urdf::Joint::REVOLUTE || joint_urdf_[index]->type == urdf::Joint::PRISMATIC) {
+      if (std::abs(cmd) > joint_urdf_[index]->limits->effort) {
+        cmd = joint_urdf_[index]->limits->effort * (cmd / std::abs(cmd));
+      }
+    }
   }
 };
 }  // namespace solo_controller

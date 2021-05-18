@@ -12,6 +12,7 @@ set(dependencies
   pluginlib
   realtime_tools
   sensor_msgs
+  urdf
 )
 find_package(catkin REQUIRED COMPONENTS ${dependencies})
 

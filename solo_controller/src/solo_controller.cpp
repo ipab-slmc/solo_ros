@@ -95,6 +95,19 @@ bool SoloController::init(
     dyn_reconf_server_[i]->setCallback(boost::bind(&SoloController::dyn_reconf_callback, this, _1, _2, i));
   }
 
+  // URDF parsing for enforcing joint limit
+  urdf::Model urdf;
+  ros::NodeHandle urdf_nh("");
+  if (!urdf.initParamWithNodeHandle("robot_description", urdf_nh)) {
+    ROS_ERROR("Failed to parse URDF");
+    return false;
+  }
+
+  // TODO(JaehyunShim): Add exception throwing lines
+  for (size_t i = 0; i < joint_size_; i++) {
+    joint_urdf_.emplace_back(urdf.getJoint(joint_name_[i]));
+  }
+
   return true;
 }
 
@@ -150,8 +163,9 @@ void SoloController::update(const ros::Time & time, const ros::Duration & period
 
   // Send effort command to motors
   for (size_t i = 0; i < joint_size_; i++) {
+    enforce_joint_limit(eff_cmd_[i], i);
     joint_handle_[i].setCommand(eff_cmd_[i]);
-    // ROS_INFO("%d joint command: %lf", i, eff_cmd_[i]);
+    ROS_INFO("%d joint command: %lf", i, eff_cmd_[i]);
   }
 
   // Publish joint_state data
@@ -168,6 +182,8 @@ void SoloController::update(const ros::Time & time, const ros::Duration & period
     solo_controller::SoloControllerConfig solo_controller_config = *(solo_controller_config_[i].readFromRT());
     kp_[i] = solo_controller_config.p;
     kd_[i] = solo_controller_config.d;
+    ROS_INFO("%d joint kp_: %lf", i, kp_[i]);
+    ROS_INFO("%d joint kd_: %lf", i, kd_[i]);
   }
 }
 
