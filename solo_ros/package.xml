@@ -3,7 +3,7 @@
   href="http://download.ros.org/schema/package_format3.xsd"
   schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>solo</name>
+  <name>solo_ros</name>
   <version>0.0.0</version>
   <description>ROS metapackage for solo packages</description>
   <maintainer email="sjh2808@gmail.com">Jaehyun Shim</maintainer>
@@ -19,6 +19,7 @@
   <exec_depend>solo_driver</exec_depend>
   <exec_depend>solo_gazebo</exec_depend>
   <exec_depend>solo_hw_interface</exec_depend>
+  <exec_depend>solo_planner</exec_depend>
 
   <export>
     <metapackage/>

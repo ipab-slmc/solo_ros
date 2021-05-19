@@ -1,14 +1,14 @@
-# SOLO
+# SOLO ROS
 
 ## Install
 - Ubuntu 20.04
 - ROS Noetic Ninjemys
 - Dependencies by rosdep
-- Dependencies by rosinstall
+- Dependencies in solo.rosinstall by rosinstall
 
 ## Run
 ```sh
-# Physical Robot (Driver is empty yet)
+# Physical Robot
 $ roslaunch solo_hw_interface solo.launch
 
 # Gazebo
@@ -17,6 +17,9 @@ $ roslaunch solo_gazebo solo.launch
 
 (Floating in the air)
 $ roslaunch solo_gazebo solo_fixed.launch
+
+# Planner
+$ rosrun solo_planner solo_planner
 
 # Rviz
 $ roslaunch solo_description solo_rviz.launch

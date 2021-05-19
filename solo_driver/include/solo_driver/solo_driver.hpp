@@ -7,6 +7,9 @@
 //
 //
 
+// TODO(JaehyunShim): Create a vector repository for below link
+// Reference: https://github.com/open-dynamic-robot-initiative/solo
+
 #ifndef SOLO_DRIVER__SOLO_DRIVER_HPP_
 #define SOLO_DRIVER__SOLO_DRIVER_HPP_
 

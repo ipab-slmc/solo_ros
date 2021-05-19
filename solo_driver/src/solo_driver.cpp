@@ -46,7 +46,7 @@ std::vector<double> SoloDriver::read_joint()
   // Dummy
   for (size_t i = 0; i < joint_size_; i++) {
     joint_data_.at(i) = 0.1;
-    ROS_INFO("Joint %d State: %lf", i, joint_data_.at(i));
+    // ROS_INFO("Joint %d State: %lf", i, joint_data_.at(i));
   }
 
   return joint_data_;
@@ -71,7 +71,7 @@ bool SoloDriver::write_joint(std::vector<double> cmd)
 {
   // Dummy
   for (size_t i = 0; i < joint_size_; i++) {
-    ROS_INFO("Joint i Command: %lf", i, cmd.at(i));
+    // ROS_INFO("Joint %d Command: %lf", i, cmd.at(i));
   }
 
   // Set robot action

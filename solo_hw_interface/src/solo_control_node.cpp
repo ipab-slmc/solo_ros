@@ -51,7 +51,7 @@ int main(int argc, char * argv[])
     hw_interface.read();
     cm.update(ros::Time::now(), elapsed);
     hw_interface.write();
-    r.sleep();  // sleep for 1[ms]
+    r.sleep();
   }
 
   // Shutdown

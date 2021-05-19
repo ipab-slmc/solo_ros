@@ -127,6 +127,7 @@ void SoloController::update(const ros::Time & time, const ros::Duration & period
 {
   // Get current time
   ros::Time curr_time = time;
+  ROS_INFO("Current Time: %d", time.toNSec());
 
   // Get joint data
   for (size_t i = 0; i < joint_size_; i++) {
