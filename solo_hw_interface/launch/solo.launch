@@ -10,7 +10,9 @@
 
   <!-- Load parameters for controllers -->
   <rosparam file="$(find solo_hw_interface)/config/solo_controller.yaml" command="load"/>
+  <rosparam file="$(find solo_hw_interface)/config/imu_sensor_controller.yaml" command="load"/>
 
   <!-- Spawn controllers -->
-  <node pkg="controller_manager" type="spawner" name="spawner" respawn="false" output="screen" args="solo_controller"/>
+  <node pkg="controller_manager" type="spawner" name="spawner" respawn="false" output="screen" 
+    args="solo_controller imu_sensor_controller"/>
 </launch>

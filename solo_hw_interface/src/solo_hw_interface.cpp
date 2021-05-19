@@ -71,29 +71,52 @@ bool SoloHwInterface::init(ros::NodeHandle & root_nh, ros::NodeHandle & robot_hw
       hardware_interface::JointHandle(
         joint_state_interface_.getHandle(joint_name_.at(i)), &eff_cmd_.at(i)));
   }
+  // Register imu handle
+  // TODO(JaehyunShim): If needed, allow users to set name, frame_id at runtime
+  imu_interface_.registerHandle(
+    hardware_interface::ImuSensorHandle(
+      "imu", "base_link", ori_, ori_cov_, ang_vel_, ang_vel_cov_, lin_acc_, lin_acc_cov_));
 
   // Register joint interfaces
   registerInterface(&joint_state_interface_);
   registerInterface(&pos_joint_interface_);
   registerInterface(&vel_joint_interface_);
   registerInterface(&eff_joint_interface_);
+  registerInterface(&imu_interface_);
 
   return true;
 }
 
 void SoloHwInterface::read()
 {
-  pos_ = std::move(solo_driver_->read_joint());  // maybe better name it to read_joint_state
+  // Joint State
+  pos_ = std::move(solo_driver_->read_joint_pos());  // maybe better name it to read_joint_state
+  vel_ = std::move(solo_driver_->read_joint_vel());  // maybe better name it to read_joint_state
 
-  // TODO(JaehyunShim): For IMU, should move to imu_hw_interface later
-  // double data;
-  // data = solo_driver_->read_sensor();
+  // IMU
+  imu_ = solo_driver_->read_imu();
+  ori_[0] = imu_.orientation.x;
+  ori_[1] = imu_.orientation.y;
+  ori_[2] = imu_.orientation.z;
+  ori_[3] = imu_.orientation.w;
+  ang_vel_[0] = imu_.angular_velocity.x;
+  ang_vel_[1] = imu_.angular_velocity.y;
+  ang_vel_[2] = imu_.angular_velocity.z;
+  lin_acc_[0] = imu_.linear_acceleration.x;
+  lin_acc_[1] = imu_.linear_acceleration.y;
+  lin_acc_[2] = imu_.linear_acceleration.z;
+  for (size_t i = 0; i < 9; i++)
+  {
+    ori_cov_[i] = imu_.orientation_covariance[i];
+    ang_vel_cov_[i] = imu_.angular_velocity_covariance[i];
+    lin_acc_cov_[i] = imu_.linear_acceleration_covariance[i];
+  }
 }
 
 void SoloHwInterface::write()
 {
   // TODO(JaehyunShim): Add a feature for switching between pos, vel, eff
-  solo_driver_->write_joint(eff_cmd_);  // maybe better name it to write_joint_cmd
+  solo_driver_->write_joint_eff_cmd(eff_cmd_);
 }
 
 }  // namespace solo_hw_interface

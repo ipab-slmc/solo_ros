@@ -14,68 +14,60 @@
 
 namespace solo_driver
 {
-SoloDriver::SoloDriver()
+void SoloDriver::init(uint8_t joint_size)
 {
-  // Init robot frontend
-  // robot_data_ptr_ =
-  //   std::make_shared<robot_interfaces::MultiProcessRobotData<Action, Observation>>(
-  //     "robot_data", false);
-  // robot_frontend_ = robot_interfaces::RobotFrontend<Action, Observation>(robot_data_ptr_);
-
-  // Init sensor frontend
-  // sensor_data_ptr_ = std::make_shared<robot_interfaces::SensorData<ObservationType>>(
-  //   "sensor_data", false);
-  // sensor_frontend_ = robot_interfaces::SensorFrontend<ObservationType>(sensor_data_ptr_);
+  joint_size_ = joint_size;
+  pos_.resize(joint_size_);
+  vel_.resize(joint_size_);
 }
 
-std::vector<double> SoloDriver::read_joint()
+std::vector<double> SoloDriver::read_joint_pos()
 {
-  // TODO(JaehyunShim): Write read_onoff switch code
-  // Write has to be done first
-  // or maybe t_index_ is not really needed..?
-  // Should it be read -> process -> write loop or write -> process -> read?
-
-  // Get robot observation
-  // robot_observation_ = robot_frontend_.get_observation(t_index_);
-  // robot_observation_.print(true);
-  // static double robot_data[joint_size_];
-  // for (size_t i = 0; i < joint_size_; i++) {
-  //   robot_data[i] = robot_observation_.values[i];
-  // }
-
   // Dummy
   for (size_t i = 0; i < joint_size_; i++) {
-    joint_data_.at(i) = 0.1;
-    // ROS_INFO("Joint %d State: %lf", i, joint_data_.at(i));
+    pos_.at(i) = 0.1;
+    // ROS_INFO("Joint %d Position: %lf", i, pos_.at(i));
   }
 
-  return joint_data_;
+  return pos_;
 }
 
-double SoloDriver::read_sensor()
+std::vector<double> SoloDriver::read_joint_vel()
 {
-  // TODO(JaehyunShim): Write read_onoff switch code
-
-  // Get sensor observation
-  // sensor_observation_ = sensor_frontend_.get_observation(t_index_);
-  // sensor_observation_.print(true);
-  // sensor_data = sensor_observation_.values[0];
-
   // Dummy
-  static double sensor_data;
+  for (size_t i = 0; i < joint_size_; i++) {
+    vel_.at(i) = 0.2;
+    // ROS_INFO("Joint %d Velocity: %lf", i, vel_.at(i));
+  }
 
-  return sensor_data;
+  return vel_;
 }
 
-bool SoloDriver::write_joint(std::vector<double> cmd)
+sensor_msgs::Imu SoloDriver::read_imu()
+{
+  // Dummy
+  imu_.orientation.x = 0.0;
+  imu_.orientation.y = 0.0;
+  imu_.orientation.z = 0.0;
+  imu_.orientation.w = 1.0;
+  imu_.angular_velocity.x = 1.0;
+  imu_.angular_velocity.y = 2.0;
+  imu_.angular_velocity.z = 3.0;
+  imu_.linear_acceleration.x = -1.0;
+  imu_.linear_acceleration.y = -2.0;
+  imu_.linear_acceleration.z = -3.0;
+  imu_.orientation_covariance = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+  imu_.angular_velocity_covariance = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+  imu_.linear_acceleration_covariance = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+
+  return imu_;
+}
+
+void SoloDriver::write_joint_eff_cmd(std::vector<double> eff_cmd)
 {
   // Dummy
   for (size_t i = 0; i < joint_size_; i++) {
     // ROS_INFO("Joint %d Command: %lf", i, cmd.at(i));
   }
-
-  // Set robot action
-  // t_index_ = frontend.append_desired_action(action);
-  // action.print(false);  // set to true if you want to print action
 }
 }  // namespace solo_driver
