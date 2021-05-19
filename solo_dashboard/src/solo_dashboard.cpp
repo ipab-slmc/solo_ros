@@ -43,25 +43,15 @@ void SoloDashboard::initPlugin(qt_gui_cpp::PluginContext & context)
   context.addWidget(widget_);
 
   // Set states
+  connect(ui_.solo_test_on_button, SIGNAL(clicked(bool)), this, SLOT(set_solo_test_on()));
+  connect(ui_.solo_test_off_button, SIGNAL(clicked(bool)), this, SLOT(set_solo_test_off()));
   connect(ui_.pub_on_button, SIGNAL(clicked(bool)), this, SLOT(set_pub_on()));
   connect(ui_.pub_off_button, SIGNAL(clicked(bool)), this, SLOT(set_pub_off()));
   connect(ui_.sub_on_button, SIGNAL(clicked(bool)), this, SLOT(set_sub_on()));
   connect(ui_.sub_off_button, SIGNAL(clicked(bool)), this, SLOT(set_sub_off()));
-  connect(ui_.solo_test_on_button, SIGNAL(clicked(bool)), this, SLOT(set_solo_test_on()));
-  connect(ui_.solo_test_off_button, SIGNAL(clicked(bool)), this, SLOT(set_solo_test_off()));
 
   connect(ui_.button_2_1, SIGNAL(clicked(bool)), this, SLOT(press_button_2_1()));
   connect(ui_.button_2_2, SIGNAL(clicked(bool)), this, SLOT(press_button_2_2()));
-  connect(ui_.button_3_1, SIGNAL(clicked(bool)), this, SLOT(press_button_3_1()));
-  connect(ui_.button_3_2, SIGNAL(clicked(bool)), this, SLOT(press_button_3_2()));
-  connect(ui_.button_4_1, SIGNAL(clicked(bool)), this, SLOT(press_button_4_1()));
-  connect(ui_.button_4_2, SIGNAL(clicked(bool)), this, SLOT(press_button_4_2()));
-  connect(ui_.button_5_1, SIGNAL(clicked(bool)), this, SLOT(press_button_5_1()));
-  connect(ui_.button_5_2, SIGNAL(clicked(bool)), this, SLOT(press_button_5_2()));
-  connect(ui_.button_6_1, SIGNAL(clicked(bool)), this, SLOT(press_button_6_1()));
-  connect(ui_.button_6_2, SIGNAL(clicked(bool)), this, SLOT(press_button_6_2()));
-  connect(ui_.button_7_1, SIGNAL(clicked(bool)), this, SLOT(press_button_7_1()));
-  connect(ui_.button_7_2, SIGNAL(clicked(bool)), this, SLOT(press_button_7_2()));
 
   connect(ui_.f_button, SIGNAL(clicked(bool)), this, SLOT(press_f_button()));
   connect(ui_.b_button, SIGNAL(clicked(bool)), this, SLOT(press_b_button()));

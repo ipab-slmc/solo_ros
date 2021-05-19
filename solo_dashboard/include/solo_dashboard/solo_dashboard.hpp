@@ -60,16 +60,6 @@ private slots:
   void set_solo_test_off();
   void press_button_2_1();
   void press_button_2_2();
-  void press_button_3_1();
-  void press_button_3_2();
-  void press_button_4_1();
-  void press_button_4_2();
-  void press_button_5_1();
-  void press_button_5_2();
-  void press_button_6_1();
-  void press_button_6_2();
-  void press_button_7_1();
-  void press_button_7_2();
 
   void press_f_button();
   void press_b_button();

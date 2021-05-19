@@ -105,8 +105,7 @@ void SoloHwInterface::read()
   lin_acc_[0] = imu_.linear_acceleration.x;
   lin_acc_[1] = imu_.linear_acceleration.y;
   lin_acc_[2] = imu_.linear_acceleration.z;
-  for (size_t i = 0; i < 9; i++)
-  {
+  for (size_t i = 0; i < 9; i++) {
     ori_cov_[i] = imu_.orientation_covariance[i];
     ang_vel_cov_[i] = imu_.angular_velocity_covariance[i];
     lin_acc_cov_[i] = imu_.linear_acceleration_covariance[i];
@@ -115,7 +114,7 @@ void SoloHwInterface::read()
 
 void SoloHwInterface::write()
 {
-  // TODO(JaehyunShim): Add a feature for switching between pos, vel, eff
+  // Joint Command
   solo_driver_->write_joint_eff_cmd(eff_cmd_);
 }
 

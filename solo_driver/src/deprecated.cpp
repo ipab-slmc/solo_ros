@@ -1,13 +1,22 @@
 // Deprecated
 // To be removed
 
-
-
-
-
-
-
-
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+// Copyright (c) 2021, University of Edinburgh
+//
 // #include <robot_interfaces/robot_frontend.hpp>
 // #include <robot_interfaces/sensors/sensor_frontend.hpp>
 
@@ -77,8 +86,6 @@
 //   t_index_ = frontend.append_desired_action(action);
 //   action.print(false);  // set to true if you want to print action
 // }
-
-
 
 
 // Reference: https://github.com/open-dynamic-robot-initiative/robot_interfaces/blob/master/demos/types.hpp

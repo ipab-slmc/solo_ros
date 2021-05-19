@@ -18,7 +18,6 @@
 #include <ros/ros.h>
 #include <sensor_msgs/Imu.h>
 #include <solo_driver/solo_driver.hpp>
-#include <solo_driver/solo_driver.hpp>
 #include <urdf/model.h>
 
 #include <memory>
