@@ -30,4 +30,16 @@ $ rqt
 ```
 
 # Reference
-- https://github.com/open-dynamic-robot-initiative/robot_properties_solo
+- Controller framework
+  - http://wiki.ros.org/ros_control
+  - https://github.com/ros-controls/ros_control
+  - https://github.com/ros-controls/ros_controllers
+  - http://wiki.ros.org/imu_sensor_controller
+- Data communication
+  - https://github.com/ipab-slmc/ipab_controller_msgs
+- Motor & Sensor driver
+  - https://github.com/open-dynamic-robot-initiative/solo
+- Planner
+  - https://github.com/paLeziart/quadruped-reactive-walking
+- Robot description
+  - https://github.com/open-dynamic-robot-initiative/robot_properties_solo
