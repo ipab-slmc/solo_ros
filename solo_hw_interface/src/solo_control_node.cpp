@@ -23,7 +23,7 @@ void active_handler(int dummy)
 int main(int argc, char * argv[])
 {
   // Init
-  ros::init(argc, argv, "solo_hw_interface");
+  ros::init(argc, argv, "solo_control_node");
   ros::NodeHandle root_nh("");
   ros::NodeHandle robot_hw_nh("~");
 
