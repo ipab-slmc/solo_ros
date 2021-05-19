@@ -7,6 +7,9 @@
 //
 //
 
+#include <string>
+#include <vector>
+
 #include "solo_planner/solo_planner.hpp"
 
 namespace solo_planner
@@ -33,8 +36,7 @@ SoloPlanner::SoloPlanner()
   joint_name_.emplace_back("HR_KFE");
   joint_size_ = joint_name_.size();
 
-  for (size_t i = 0; i < joint_size_; i++)
-  {
+  for (size_t i = 0; i < joint_size_; i++) {
     kp_.emplace_back(0.0);
     kd_.emplace_back(0.0);
     pos_curr_.emplace_back(0.0);
@@ -48,14 +50,14 @@ SoloPlanner::SoloPlanner()
   // TODO(JaehyunShim): Need more consideration on the queue size
   rt_joint_cmd_pub_.reset(
     new realtime_tools::RealtimePublisher<ipab_controller_msgs::EffortFeedforwardWithJointFeedback>(
-      nh_, "joint_cmd", 10));
+      nh_, "/solo_controller/joint_cmd", 10));
 
   // Initialize ROS subscribers
   // TODO(JaehyunShim): Need more consideration on the queue size
   joint_state_sub_ = nh_.subscribe<sensor_msgs::JointState>(
-    "joint_states", 10, &SoloPlanner::joint_state_callback, this);
-   imu_sub_ = nh_.subscribe<sensor_msgs::Imu>(
-    "imu", 10, &SoloPlanner:: imu_callback, this);
+    "/solo_controller/joint_states", 10, &SoloPlanner::joint_state_callback, this);
+  imu_sub_ = nh_.subscribe<sensor_msgs::Imu>(
+    "imu", 10, &SoloPlanner::imu_callback, this);
 
   // TODO(JaehyunShim): Consider if just emplace_back will be better
   sensor_msgs::JointState joint_state_buffer;

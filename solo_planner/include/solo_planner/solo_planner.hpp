@@ -14,6 +14,10 @@
 #include <sensor_msgs/Imu.h>
 #include <sensor_msgs/JointState.h>
 
+#include <memory>
+#include <string>
+#include <vector>
+
 #ifndef SOLO_PLANNER__SOLO_PLANNER_HPP_
 #define SOLO_PLANNER__SOLO_PLANNER_HPP_
 
@@ -45,7 +49,7 @@ private:
 
   // ROS Publisher
   std::shared_ptr<realtime_tools::RealtimePublisher<
-    ipab_controller_msgs::EffortFeedforwardWithJointFeedback>> rt_joint_cmd_pub_;
+      ipab_controller_msgs::EffortFeedforwardWithJointFeedback>> rt_joint_cmd_pub_;
 
   // ROS Subscriber
   realtime_tools::RealtimeBuffer<sensor_msgs::JointState> joint_state_buffer_;
