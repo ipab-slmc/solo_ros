@@ -22,7 +22,7 @@ namespace solo_dashboard
 SoloDashboard::SoloDashboard()
 : rqt_gui_cpp::Plugin(),
   widget_(0),
-  solo_dashboard_node_(std::make_shared<solo_dashboard::RosNode>())
+  solo_dashboard_node_(std::make_shared<solo_dashboard::Rosnode>())
 {
   setObjectName("Solo Dashboard");
 }

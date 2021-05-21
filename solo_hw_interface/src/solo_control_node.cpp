@@ -49,7 +49,7 @@ int main(int argc, char * argv[])
     curr_time = ros::Time::now();
     elapsed = curr_time - last_time;
     hw_interface.read();
-    cm.update(ros::Time::now(), elapsed);
+    cm.update(curr_time, elapsed);
     hw_interface.write();
     r.sleep();
   }

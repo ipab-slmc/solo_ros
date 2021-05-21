@@ -40,7 +40,7 @@ public:
 private:
   Ui::SoloDashboardWidget ui_;
   QWidget * widget_;
-  std::shared_ptr<solo_dashboard::RosNode> solo_dashboard_node_;
+  std::shared_ptr<solo_dashboard::Rosnode> solo_dashboard_node_;
   QTimer * ros_timer_;
   QTimer * display_timer_;
 

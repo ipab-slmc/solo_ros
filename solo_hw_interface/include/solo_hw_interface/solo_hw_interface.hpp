@@ -40,12 +40,12 @@ private:
   // Joint
   u_int8_t joint_size_;
   std::vector<std::string> joint_name_;
-  std::vector<double> pos_;
-  std::vector<double> vel_;
-  std::vector<double> eff_;
-  std::vector<double> pos_cmd_;
-  std::vector<double> vel_cmd_;
-  std::vector<double> eff_cmd_;
+  std::vector<double> pos_;  // Position
+  std::vector<double> vel_;  // Velocity
+  std::vector<double> eff_;  // Effort
+  std::vector<double> pos_cmd_;  // Position Command
+  std::vector<double> vel_cmd_;  // Velocity Command
+  std::vector<double> eff_cmd_;  // Effort Command
 
   // IMU
   double ori_[4];  // Orientation

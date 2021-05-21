@@ -86,6 +86,7 @@ SoloPlanner::SoloPlanner()
   imu_buffer_.writeFromNonRT(imu_buffer);
 
   // Initialize ROS timer
+  // TODO(JaehyunShim): Is it real-time safe to use ros timer?
   timer_ = nh_.createTimer(ros::Duration(0.001), &SoloPlanner::timer_callback, this);
 }
 
@@ -113,6 +114,8 @@ void SoloPlanner::timer_callback(const ros::TimerEvent & te)
 
   // Publish joint_cmd data
   if (rt_joint_cmd_pub_->trylock()) {
+    // TODO(JaehyunShim): See how readFromRT works.
+    // If time stamp is used in the process, add timestamp to ipab_controller_msgs
     rt_joint_cmd_pub_->msg_.name = joint_name_;
     rt_joint_cmd_pub_->msg_.positions = pos_ref_;
     rt_joint_cmd_pub_->msg_.velocities = vel_ref_;

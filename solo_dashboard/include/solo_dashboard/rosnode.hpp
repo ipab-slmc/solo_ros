@@ -21,11 +21,11 @@
 
 namespace solo_dashboard
 {
-class RosNode
+class Rosnode
 {
 public:
-  RosNode();
-  ~RosNode() {}
+  Rosnode();
+  ~Rosnode() {}
 
   bool pub_onoff_ = false;
   bool sub_onoff_ = false;

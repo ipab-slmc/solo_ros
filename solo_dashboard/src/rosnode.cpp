@@ -19,23 +19,23 @@
 
 namespace solo_dashboard
 {
-RosNode::RosNode()
+Rosnode::Rosnode()
 : nh_(""),
   private_nh_("~")
 {
   // Initialize ROS publishers and subscribers
   // TODO(JaehyunShim): Need more consideration on queue size
   chatter_pub_ = nh_.advertise<std_msgs::String>("chatter", 10);
-  chatter_sub_ = nh_.subscribe("chatter", 10, &RosNode::chatter_callback, this);
+  chatter_sub_ = nh_.subscribe("chatter", 10, &Rosnode::chatter_callback, this);
   cmd_vel_pub_ = nh_.advertise<geometry_msgs::Twist>("cmd_vel", 10);
   solo_test_pub_ = nh_.advertise<ipab_controller_msgs::EffortFeedforwardWithJointFeedback>(
     "joint_cmd", 10);
 
   // Initialize ROS timer
-  timer_ = nh_.createTimer(ros::Duration(0.01), &RosNode::timer_callback, this);
+  timer_ = nh_.createTimer(ros::Duration(0.01), &Rosnode::timer_callback, this);
 }
 
-void RosNode::timer_callback(const ros::TimerEvent & te)
+void Rosnode::timer_callback(const ros::TimerEvent & te)
 {
   static int count = 0;
   if (pub_onoff_ == true) {
@@ -57,7 +57,7 @@ void RosNode::timer_callback(const ros::TimerEvent & te)
   // solo_test_pub_.publish(joint_cmd_msg);
 }
 
-void RosNode::chatter_callback(const std_msgs::String::ConstPtr & msg)
+void Rosnode::chatter_callback(const std_msgs::String::ConstPtr & msg)
 {
   if (sub_onoff_ == true) {
     ROS_INFO("Subscriber: %s", msg->data.c_str());
