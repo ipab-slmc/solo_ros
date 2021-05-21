@@ -49,7 +49,7 @@ private:
 
   // ROS Publisher
   std::shared_ptr<realtime_tools::RealtimePublisher<
-      ipab_controller_msgs::EffortFeedforwardWithJointFeedback>> rt_joint_cmd_pub_;
+      ipab_controller_msgs::EffortFeedforwardWithJointFeedback>> rt_joint_command_pub_;
 
   // ROS Subscriber
   realtime_tools::RealtimeBuffer<sensor_msgs::JointState> joint_state_buffer_;

@@ -48,9 +48,9 @@ SoloPlanner::SoloPlanner()
 
   // Initialize ROS publishers
   // TODO(JaehyunShim): Need more consideration on the queue size
-  rt_joint_cmd_pub_.reset(
+  rt_joint_command_pub_.reset(
     new realtime_tools::RealtimePublisher<ipab_controller_msgs::EffortFeedforwardWithJointFeedback>(
-      nh_, "/solo_controller/joint_cmd", 10));
+      nh_, "/solo_controller/joint_command", 10));
 
   // Initialize ROS subscribers
   // TODO(JaehyunShim): Need more consideration on the queue size
@@ -112,18 +112,18 @@ void SoloPlanner::timer_callback(const ros::TimerEvent & te)
   // {pos_ref_, vel_ref_, eff_ref_} = compute_references(pos_curr_, vel_curr_, imu_)
   // ------------------------------------------------------------------------------------------
 
-  // Publish joint_cmd data
-  if (rt_joint_cmd_pub_->trylock()) {
+  // Publish joint_command data
+  if (rt_joint_command_pub_->trylock()) {
     // TODO(JaehyunShim): See how readFromRT works.
     // If time stamp is used in the process, add timestamp to ipab_controller_msgs
-    rt_joint_cmd_pub_->msg_.name = joint_name_;
-    rt_joint_cmd_pub_->msg_.positions = pos_ref_;
-    rt_joint_cmd_pub_->msg_.velocities = vel_ref_;
-    rt_joint_cmd_pub_->msg_.efforts = eff_ref_;
+    rt_joint_command_pub_->msg_.name = joint_name_;
+    rt_joint_command_pub_->msg_.positions = pos_ref_;
+    rt_joint_command_pub_->msg_.velocities = vel_ref_;
+    rt_joint_command_pub_->msg_.efforts = eff_ref_;
     // TODO(JaehyunShim): Check how to kp, kd are going to be sent
-    // rt_joint_cmd_pub_->msg_.position_gains = kp_;
-    // rt_joint_cmd_pub_->msg_.velocity_gains = kd_;
-    rt_joint_cmd_pub_->unlockAndPublish();
+    // rt_joint_command_pub_->msg_.position_gains = kp_;
+    // rt_joint_command_pub_->msg_.velocity_gains = kd_;
+    rt_joint_command_pub_->unlockAndPublish();
   }
 }
 }  // namespace solo_planner

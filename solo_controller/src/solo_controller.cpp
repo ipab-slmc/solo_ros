@@ -63,20 +63,20 @@ bool SoloController::init(
 
   // Initialize ROS subscribers
   // TODO(JaehyunShim): Need more consideration on the queue size
-  joint_cmd_sub_ =
+  joint_command_sub_ =
     controller_nh.subscribe<ipab_controller_msgs::EffortFeedforwardWithJointFeedback>(
-    "joint_cmd", 10, &SoloController::joint_cmd_callback, this);
+    "joint_command", 10, &SoloController::joint_command_callback, this);
 
-  ipab_controller_msgs::EffortFeedforwardWithJointFeedback joint_cmd_buffer;
-  joint_cmd_buffer.positions.resize(joint_size_);
-  joint_cmd_buffer.velocities.resize(joint_size_);
-  joint_cmd_buffer.efforts.resize(joint_size_);
+  ipab_controller_msgs::EffortFeedforwardWithJointFeedback joint_command_buffer;
+  joint_command_buffer.positions.resize(joint_size_);
+  joint_command_buffer.velocities.resize(joint_size_);
+  joint_command_buffer.efforts.resize(joint_size_);
   for (size_t i = 0; i < joint_size_; i++) {
-    joint_cmd_buffer.positions[i] = 0.0;
-    joint_cmd_buffer.velocities[i] = 0.0;
-    joint_cmd_buffer.efforts[i] = 0.0;
+    joint_command_buffer.positions[i] = 0.0;
+    joint_command_buffer.velocities[i] = 0.0;
+    joint_command_buffer.efforts[i] = 0.0;
   }
-  joint_cmd_buffer_.writeFromNonRT(joint_cmd_buffer);
+  joint_command_buffer_.writeFromNonRT(joint_command_buffer);
 
   // Dynamic reconfigure for PD gains
   // Reference: https://github.com/ros-controls/control_toolbox/blob/melodic-devel/src/pid.cpp
@@ -149,13 +149,13 @@ void SoloController::update(const ros::Time & time, const ros::Duration & period
   }
 
   // Get reference position, velocity, effort from the planner
-  ipab_controller_msgs::EffortFeedforwardWithJointFeedback joint_cmd_buffer =
-    *(joint_cmd_buffer_.readFromRT());
+  ipab_controller_msgs::EffortFeedforwardWithJointFeedback joint_command_buffer =
+    *(joint_command_buffer_.readFromRT());
   for (size_t i = 0; i < joint_size_; i++) {
-    // TODO(Jaehyun): Add lines checking if joint_name equals joint_cmd_buffer.name[i]
-    pos_ref_[i] = joint_cmd_buffer.positions[i];
-    vel_ref_[i] = joint_cmd_buffer.velocities[i];
-    eff_ref_[i] = joint_cmd_buffer.efforts[i];
+    // TODO(Jaehyun): Add lines checking if joint_name equals joint_command_buffer.name[i]
+    pos_ref_[i] = joint_command_buffer.positions[i];
+    vel_ref_[i] = joint_command_buffer.velocities[i];
+    eff_ref_[i] = joint_command_buffer.efforts[i];
   }
 
   // TODO(Jaehyun): Interpolate received reference data if needed

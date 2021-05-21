@@ -66,12 +66,12 @@ private:
 
   // ROS Subscriber
   realtime_tools::RealtimeBuffer<ipab_controller_msgs::EffortFeedforwardWithJointFeedback>
-  joint_cmd_buffer_;
-  ros::Subscriber joint_cmd_sub_;
-  void joint_cmd_callback(
+  joint_command_buffer_;
+  ros::Subscriber joint_command_sub_;
+  void joint_command_callback(
     const ipab_controller_msgs::EffortFeedforwardWithJointFeedback::ConstPtr & msg)
   {
-    joint_cmd_buffer_.writeFromNonRT(*msg);
+    joint_command_buffer_.writeFromNonRT(*msg);
   }
 
   // ROS Dynamic Reconfigure Server
