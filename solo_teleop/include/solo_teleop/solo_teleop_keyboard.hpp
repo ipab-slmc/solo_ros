@@ -55,7 +55,9 @@ private:
   void run();
   void print_keyop();
   // TODO(JaehyunShim): print_vel should be curr vel? or ref vel?
-  void send_cmd_vel(double vel_lin_x, double vel_lin_y, double vel_lin_z, double vel_ang_x, double vel_ang_y, double vel_ang_z);
+  void send_cmd_vel(
+    double vel_lin_x, double vel_lin_y, double vel_lin_z,
+    double vel_ang_x, double vel_ang_y, double vel_ang_z);
   double enforce_vel_limit(double vel, double limit);
 };
 }  // namespace solo_teleop

@@ -1,53 +1,19 @@
-// TODO(JaehyunShim): Write copyright
-//
-// Copyright (c) 2021, University of Edinburgh
-//
-//
-// Check what license will be used.
-//
-//
+solo_teleop:
+  # Rewrite this chunks... Simplify using struct
+  lin_vel_x_limit: 0.5
+  lin_vel_x_step_size: 0.01
 
-#ifndef SOLO_TELEOP__SOLO_TELEOP_JOYSTICK_HPP_
-#define SOLO_TELEOP__SOLO_TELEOP_JOYSTICK_HPP_
+  lin_vel_y_limit: 0.5
+  lin_vel_y_step_size: 0.01
 
-#include <geometry_msgs/Twist.h>
-#include <ros/ros.h>
-#include <sensor_msgs/Joy.h>
+  lin_vel_z_limit: 0.5
+  lin_vel_z_step_size: 0.01
 
-namespace solo_teleop
-{
-class SoloTeleopJoystick
-{
-public:
-  SoloTeleopJoystick();
-  ~SoloTeleopJoystick();
+  ang_vel_x_limit: 5.0
+  ang_vel_x_step_size: 0.10
 
-private:
-  // Forward/Backward Linear
-  double fb_lin_vel_limit_;
-  double fb_lin_vel_step_size_;
-  // Left/Right Linear
-  double lr_lin_vel_limit_;
-  double lr_lin_vel_step_size_;
-  // Angular
-  double ang_vel_limit_;
-  double ang_vel_step_size_;
+  ang_vel_y_limit: 5.0
+  ang_vel_y_step_size: 0.10
 
-  // Node Handle
-  ros::NodeHandle nh_;
-  ros::NodeHandle private_nh_;
-
-  // ROS Publisher
-  ros::Publisher cmd_vel_pub_;
-
-  // ROS Subscriber
-  ros::Subscriber joy_sub_;
-  void joy_callback(const sensor_msgs::Joy::ConstPtr & msg);
-
-  void print_joyop();
-  void set_goal(const char * str);
-  void print_vel(double lin_vel_ref, double ang_vel_ref);
-  void enforce_vel_limit(double & vel, double limit);
-};
-}  // namespace solo_teleop
-#endif  // SOLO_TELEOP__SOLO_TELEOP_JOYSTICK_HPP_
+  ang_vel_z_limit: 5.0
+  ang_vel_z_step_size: 0.10

@@ -60,37 +60,26 @@ void SoloTeleopJoystick::joy_callback(const sensor_msgs::Joy::ConstPtr & msg)
 
   // TODO(JaehyunShim): Key recheck needed
 
-  // Boost x, y direction speed
-  if (msg->axes.at(3) <= -0.9) {
+  if (msg->axes.at(3) <= -0.9) {  // Boost x, y direction speed
   }
 
-  // Boost yaw direction speed
-  if (msg->axes.at(3) <= -0.9) {
+
+  if (msg->axes.at(3) <= -0.9) {  // Boost yaw direction speed
   }
 
-  // Move in x direction
-  if (msg->axes.at(1) >= 0.9) {
+  if (msg->axes.at(1) >= 0.9) {  // Move in x direction
     send_cmd_vel(1.0, 0.0, 0.0, 0.0, 0.0, 0.0);
   } else if (msg->axes.at(1) <= -0.9) {
     send_cmd_vel(-1.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-  }
-
-  // Move in y direction
-  else if (msg->axes.at(0) >=  0.9) {
+  } else if (msg->axes.at(0) >= 0.9) {  // Move in y direction
     send_cmd_vel(0.0, 1.0, 0.0, 0.0, 0.0, 0.0);
   } else if (msg->axes.at(0) <= -0.9) {
     send_cmd_vel(0.0, -1.0, 0.0, 0.0, 0.0, 0.0);
-  }
-
-  // Move in yaw direction
-  else if (msg->axes.at(6) == -1.0) {
+  } else if (msg->axes.at(6) == -1.0) {  // Move in yaw direction
     send_cmd_vel(0.0, 0.0, 0.0, 0.0, 0.0, 1.0);
   } else if (msg->axes.at(6) == -1.0) {
     send_cmd_vel(0.0, 0.0, 0.0, 0.0, 0.0, -1.0);
-  }
-
-  // Stop
-  else if (msg->buttons.at(0) == 1) {
+  } else if (msg->buttons.at(0) == 1) {  // Stop
     send_cmd_vel(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
   }
 
@@ -120,7 +109,9 @@ void SoloTeleopJoystick::print_joyop()
 // TODO(JaehyunShim): Add smoother
 
 // TODO(JaehyunShim): why has to be reference, not pointer..?
-void SoloTeleopJoystick::send_cmd_vel(double vel_lin_x, double vel_lin_y, double vel_lin_z, double vel_ang_x, double vel_ang_y, double vel_ang_z)
+void SoloTeleopJoystick::send_cmd_vel(
+  double vel_lin_x, double vel_lin_y, double vel_lin_z,
+  double vel_ang_x, double vel_ang_y, double vel_ang_z)
 {
   // Enforce velocity limit
   geometry_msgs::Twist cmd_vel_msg;

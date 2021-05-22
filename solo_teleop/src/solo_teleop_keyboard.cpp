@@ -116,7 +116,9 @@ void SoloTeleopKeyboard::run()
           break;
       }
 
-      send_cmd_vel(lin_vel_x_ref, lin_vel_y_ref, lin_vel_z_ref, ang_vel_x_ref, ang_vel_y_ref, ang_vel_z_ref);
+      send_cmd_vel(
+        lin_vel_x_ref, lin_vel_y_ref, lin_vel_z_ref,
+        ang_vel_x_ref, ang_vel_y_ref, ang_vel_z_ref);
 
       // Print keyboard operation every 10 commands
       count += 1;
@@ -135,6 +137,11 @@ void SoloTeleopKeyboard::print_keyop()
   // TODO(JaehyunShim): Rewrite .. Better keyop?
   ROS_INFO("Key Operation\n");
   ROS_INFO("----------------------------------------\n");
+  ROS_INFO("\n");
+  ROS_INFO("q w e     y u i  \n");
+  ROS_INFO("a s d     h j k  \n");
+  ROS_INFO("  x         m    \n");
+  ROS_INFO("\n");
   ROS_INFO("w/x: lin_vel_x +-\n");
   ROS_INFO("a/d: lin_vel_y +-\n");
   ROS_INFO("q/e: lin_vel_z +-\n");
@@ -142,20 +149,23 @@ void SoloTeleopKeyboard::print_keyop()
   ROS_INFO("h/k: ang_vel_y +-\n");
   ROS_INFO("y/i: ang_vel_z +-\n");
   ROS_INFO("\n");
+  ROS_INFO("s: Stop\n");
+  ROS_INFO("\n");
   ROS_INFO("lin_vel_x limit %.1lf\n", lin_vel_x_limit_);
   ROS_INFO("lin_vel_y limit %.1lf\n", lin_vel_y_limit_);
   ROS_INFO("lin_vel_z limit %.1lf\n", lin_vel_z_limit_);
-  ROS_INFO("ang_vel_x limit %.1lf\n", lin_vel_x_limit_);
-  ROS_INFO("ang_vel_y limit %.1lf\n", lin_vel_y_limit_);
-  ROS_INFO("ang_vel_z limit %.1lf\n", lin_vel_z_limit_);
+  ROS_INFO("ang_vel_x limit %.1lf\n", ang_vel_x_limit_);
+  ROS_INFO("ang_vel_y limit %.1lf\n", ang_vel_y_limit_);
+  ROS_INFO("ang_vel_z limit %.1lf\n", ang_vel_z_limit_);
   ROS_INFO("\n");
-  ROS_INFO("s: Stop\n");
 }
 
 // TODO(JaehyunShim): Add smoother
 
 // TODO(JaehyunShim): why has to be reference, not pointer..?
-void SoloTeleopKeyboard::send_cmd_vel(double vel_lin_x, double vel_lin_y, double vel_lin_z, double vel_ang_x, double vel_ang_y, double vel_ang_z)
+void SoloTeleopKeyboard::send_cmd_vel(
+  double vel_lin_x, double vel_lin_y, double vel_lin_z,
+  double vel_ang_x, double vel_ang_y, double vel_ang_z)
 {
   // Enforce velocity limit
   geometry_msgs::Twist cmd_vel_msg;

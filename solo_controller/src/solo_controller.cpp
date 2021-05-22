@@ -259,8 +259,7 @@ void SoloController::update(const ros::Time & time, const ros::Duration & period
     rt_wb_state_pub_->msg_.header.frame_id = "base_link";
     rt_wb_state_pub_->msg_.time = curr_time.toSec();  // TODO(Jaehyun): Redundant, Already in header
     // rt_wb_state_pub_->msg_.centroidal = ;
-    for (size_t i = 0; i < joint_size_; i++)
-    {
+    for (size_t i = 0; i < joint_size_; i++) {
       rt_wb_state_pub_->msg_ = wb_state_;
     }
     // rt_wb_state_pub_->msg_.contacts = ;
@@ -273,8 +272,7 @@ void SoloController::update(const ros::Time & time, const ros::Duration & period
   wb_state_traj_.emplace_back(wb_state_);
   wb_state_traj_.emplace_back(wb_state_);
   if (rt_wb_traj_pub_->trylock()) {
-    for (size_t i = 0; i < joint_size_; i++)
-    {
+    for (size_t i = 0; i < joint_size_; i++) {
       rt_wb_traj_pub_->msg_.actual = wb_state_;
       rt_wb_traj_pub_->msg_.trajectory = wb_state_traj_;
     }
