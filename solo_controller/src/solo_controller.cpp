@@ -45,6 +45,18 @@ bool SoloController::init(
     controller_nh.getParam("gain/" + joint_name_[i] + "/pid/d", kd_[i]);
   }
 
+  // Initialize whole body state
+  // TODO(JaehyunShim)
+  // wb_state_.centroidal;
+  wb_state_.joints.resize(joint_size_);
+  for (size_t i = 0; i < joint_size_; i++) {
+    wb_state_.joints[i].name = joint_name_[i];
+    wb_state_.joints[i].position = 0.0;
+    wb_state_.joints[i].velocity = 0.0;
+    wb_state_.joints[i].effort = 0.0;
+  }
+  // wb_state_.contacts;
+
   // Joint Handle
   for (size_t i = 0; i < joint_size_; i++) {
     try {
@@ -61,6 +73,20 @@ bool SoloController::init(
     new realtime_tools::RealtimePublisher<sensor_msgs::JointState>(
       controller_nh, "joint_states", 10));
 
+  // TODO(JaehyunShim): Need more consideration on the queue size
+  // rt_tf_pub_.reset(
+  //   new realtime_tools::RealtimePublisher<tf2_msgs::TFMessage>(
+  //     root_nh, "tf", 10));
+
+  // TODO(JaehyunShim): Need more consideration on the queue size
+  rt_wb_state_pub_.reset(
+    new realtime_tools::RealtimePublisher<whole_body_state_msgs::WholeBodyState>(
+      controller_nh, "whole_body_state", 10));
+
+  rt_wb_traj_pub_.reset(
+    new realtime_tools::RealtimePublisher<whole_body_state_msgs::WholeBodyTrajectory>(
+      controller_nh, "whole_body_trajectory", 10));
+
   // Initialize ROS subscribers
   // TODO(JaehyunShim): Need more consideration on the queue size
   joint_command_sub_ =
@@ -75,6 +101,9 @@ bool SoloController::init(
     joint_command_buffer.positions[i] = 0.0;
     joint_command_buffer.velocities[i] = 0.0;
     joint_command_buffer.efforts[i] = 0.0;
+    // TODO(JaehyunShim)
+    // joint_command_buffer.position_gains[i] = 0.0;
+    // joint_command_buffer.velocity_gains[i] = 0.0;
   }
   joint_command_buffer_.writeFromNonRT(joint_command_buffer);
 
@@ -156,6 +185,9 @@ void SoloController::update(const ros::Time & time, const ros::Duration & period
     pos_ref_[i] = joint_command_buffer.positions[i];
     vel_ref_[i] = joint_command_buffer.velocities[i];
     eff_ref_[i] = joint_command_buffer.efforts[i];
+    // TODO(JaehyunShim)
+    // kp_[i] = joint_command_buffer.position_gains[i];
+    // kd_[i] = joint_command_buffer.velocity_gains[i];
   }
 
   // TODO(Jaehyun): Interpolate received reference data if needed
@@ -197,6 +229,56 @@ void SoloController::update(const ros::Time & time, const ros::Duration & period
     kd_[i] = solo_controller_config.d;
     // ROS_INFO("%d joint kp_: %lf", i, kp_[i]);
     // ROS_INFO("%d joint kd_: %lf", i, kd_[i]);
+  }
+
+  // Publish tf
+  // TODO(Jaehyun):Do proper TF calc
+  // Bug: https://github.com/ros/geometry2/issues/467 from OR
+  // geometry_msgs::TransformStamped temp_tf;
+  // temp_tf.header.stamp = curr_time;
+  // temp_tf.header.frame_id = "world";
+  // temp_tf.child_frame_id = "base_link";
+  // temp_tf.transform.translation.x = 0.0;
+  // temp_tf.transform.translation.y = 0.0;
+  // temp_tf.transform.translation.z = 0.5;
+  // temp_tf.transform.rotation.x = 0.0;
+  // temp_tf.transform.rotation.y = 0.0;
+  // temp_tf.transform.rotation.z = 0.0;
+  // temp_tf.transform.rotation.w = 1.0;
+  // if (rt_tf_pub_->trylock()) {
+  //   rt_tf_pub_->msg_.transforms.emplace_back(temp_tf);
+  //   rt_tf_pub_->unlockAndPublish();
+  // }
+
+  // Publish whole body state and trajectory
+  // TODO(Jaehyun): Will need to think about which node will publish this data
+  // Let's publish dummy data for now to see the magic.
+  // wb_state_.joints =
+  if (rt_wb_state_pub_->trylock()) {
+    rt_wb_state_pub_->msg_.header.stamp = curr_time;
+    rt_wb_state_pub_->msg_.header.frame_id = "base_link";
+    rt_wb_state_pub_->msg_.time = curr_time.toSec();  // TODO(Jaehyun): Redundant, Already in header
+    // rt_wb_state_pub_->msg_.centroidal = ;
+    for (size_t i = 0; i < joint_size_; i++)
+    {
+      rt_wb_state_pub_->msg_ = wb_state_;
+    }
+    // rt_wb_state_pub_->msg_.contacts = ;
+    rt_wb_state_pub_->unlockAndPublish();
+  }
+
+  // Dummy
+  wb_state_traj_.emplace_back(wb_state_);
+  wb_state_traj_.emplace_back(wb_state_);
+  wb_state_traj_.emplace_back(wb_state_);
+  wb_state_traj_.emplace_back(wb_state_);
+  if (rt_wb_traj_pub_->trylock()) {
+    for (size_t i = 0; i < joint_size_; i++)
+    {
+      rt_wb_traj_pub_->msg_.actual = wb_state_;
+      rt_wb_traj_pub_->msg_.trajectory = wb_state_traj_;
+    }
+    rt_wb_traj_pub_->unlockAndPublish();
   }
 }
 

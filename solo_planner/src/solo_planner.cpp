@@ -108,8 +108,8 @@ void SoloPlanner::timer_callback(const ros::TimerEvent & te)
   // ------------------------------------------------------------------------------------------
   // TODO(JaehyunShim): Use compute_references function from the quadruped-reactive-walking lib
   // Input: pos_curr_, vel_curr_, imu_
-  // Output: pos_ref_, vel_ref_, eff_ref_
-  // {pos_ref_, vel_ref_, eff_ref_} = compute_references(pos_curr_, vel_curr_, imu_)
+  // Output: pos_ref_, vel_ref_, eff_ref_, kp_, kd_
+  // {pos_ref_, vel_ref_, eff_ref_, kp_, kd_} = compute_references(pos_curr_, vel_curr_, imu_)
   // ------------------------------------------------------------------------------------------
 
   // Publish joint_command data

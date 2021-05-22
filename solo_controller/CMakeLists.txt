@@ -12,7 +12,9 @@ set(dependencies
   pluginlib
   realtime_tools
   sensor_msgs
+  tf2_msgs
   urdf
+  whole_body_state_msgs
 )
 find_package(catkin REQUIRED COMPONENTS ${dependencies})
 

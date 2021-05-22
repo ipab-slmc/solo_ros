@@ -3,7 +3,8 @@ Panels:
     Help Height: 78
     Name: Displays
     Property Tree Widget:
-      Expanded: ~
+      Expanded:
+        - /Global Options1
       Splitter Ratio: 0.5
     Tree Height: 455
   - Class: rviz/Selection
@@ -465,7 +466,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 2.5878098011016846
+      Distance: 1.1674271821975708
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -473,17 +474,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: -0.03483523055911064
-        Y: 0.17419014871120453
-        Z: -0.20747330784797668
+        X: 0.06109752133488655
+        Y: 0.08507677167654037
+        Z: -0.16710682213306427
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.5303979516029358
+      Pitch: 0.545397937297821
       Target Frame: <Fixed Frame>
-      Yaw: 1.1154100894927979
+      Yaw: 1.010410189628601
     Saved: ~
 Window Geometry:
   Displays:
@@ -501,5 +502,5 @@ Window Geometry:
   Views:
     collapsed: true
   Width: 1386
-  X: 2777
-  Y: 121
+  X: 2184
+  Y: 110

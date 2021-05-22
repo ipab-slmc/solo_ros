@@ -1,4 +1,4 @@
-# How to Use
+# Usage
 #
 # $ cd ~/catkin_ws/src/
 # $ rm .rosinstall
@@ -9,4 +9,14 @@
 - git:
     local-name: ipab_controller_msgs
     uri: 'https://github.com/ipab-slmc/ipab_controller_msgs.git'
+    version: master
+
+- git:
+    local-name: whole_body_state_rviz_plugin
+    uri: 'https://github.com/loco-3d/whole_body_state_rviz_plugin.git'
+    version: master
+
+- git:
+    local-name: whole_body_state_msgs
+    uri: 'https://github.com/loco-3d/whole_body_state_msgs.git'
     version: master

@@ -16,7 +16,10 @@
 #include <ros/ros.h>
 #include <sensor_msgs/JointState.h>
 #include <solo_controller/SoloControllerConfig.h>
+#include <tf2_msgs/TFMessage.h>
 #include <urdf/model.h>
+#include <whole_body_state_msgs/WholeBodyState.h>
+#include <whole_body_state_msgs/WholeBodyTrajectory.h>
 
 #include <memory>
 #include <string>
@@ -61,8 +64,15 @@ private:
   std::vector<double> eff_ref_;
   std::vector<double> eff_cmd_;
 
+  // Whole Body State and Trajectory
+  whole_body_state_msgs::WholeBodyState wb_state_;
+  std::vector<whole_body_state_msgs::WholeBodyState> wb_state_traj_;
+
   // ROS Publisher
   std::shared_ptr<realtime_tools::RealtimePublisher<sensor_msgs::JointState>> rt_joint_state_pub_;
+  // std::shared_ptr<realtime_tools::RealtimePublisher<tf2_msgs::TFMessage>> rt_tf_pub_;
+  std::shared_ptr<realtime_tools::RealtimePublisher<whole_body_state_msgs::WholeBodyState>> rt_wb_state_pub_;
+  std::shared_ptr<realtime_tools::RealtimePublisher<whole_body_state_msgs::WholeBodyTrajectory>> rt_wb_traj_pub_;
 
   // ROS Subscriber
   realtime_tools::RealtimeBuffer<ipab_controller_msgs::EffortFeedforwardWithJointFeedback>
