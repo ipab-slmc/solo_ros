@@ -28,6 +28,13 @@ $ roslaunch solo_description solo_rviz.launch
 # Dashboard
 $ rqt
 (Plugin tab -> _Robot Dashboard_ -> Solo Dashboard)
+
+# Teleop
+(Teleop keyboard)
+$ rosrun solo_teleop solo_teleop_keyboard
+
+(Teleop Joystick)
+$ roslaunch solo_teleop solo_teleop_joystick.launch
 ```
 
 # Reference

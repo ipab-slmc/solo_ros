@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+  <node pkg="joy" type="joy_node" name="joy_node" output="screen"/>
+  <node pkg="solo_teleop" type="solo_teleop_joystick" name="solo_teleop_joystick" output="screen"/>
+</launch>

@@ -232,7 +232,7 @@ void SoloController::update(const ros::Time & time, const ros::Duration & period
   }
 
   // Publish tf
-  // TODO(Jaehyun):Do proper TF calc
+  // TODO(Jaehyun): Do proper TF calc
   // Bug: https://github.com/ros/geometry2/issues/467 from OR
   // geometry_msgs::TransformStamped temp_tf;
   // temp_tf.header.stamp = curr_time;

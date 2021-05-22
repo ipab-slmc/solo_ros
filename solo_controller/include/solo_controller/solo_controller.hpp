@@ -71,8 +71,10 @@ private:
   // ROS Publisher
   std::shared_ptr<realtime_tools::RealtimePublisher<sensor_msgs::JointState>> rt_joint_state_pub_;
   // std::shared_ptr<realtime_tools::RealtimePublisher<tf2_msgs::TFMessage>> rt_tf_pub_;
-  std::shared_ptr<realtime_tools::RealtimePublisher<whole_body_state_msgs::WholeBodyState>> rt_wb_state_pub_;
-  std::shared_ptr<realtime_tools::RealtimePublisher<whole_body_state_msgs::WholeBodyTrajectory>> rt_wb_traj_pub_;
+  std::shared_ptr<realtime_tools::RealtimePublisher<whole_body_state_msgs::WholeBodyState>>
+  rt_wb_state_pub_;
+  std::shared_ptr<realtime_tools::RealtimePublisher<whole_body_state_msgs::WholeBodyTrajectory>>
+  rt_wb_traj_pub_;
 
   // ROS Subscriber
   realtime_tools::RealtimeBuffer<ipab_controller_msgs::EffortFeedforwardWithJointFeedback>
