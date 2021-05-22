@@ -8,7 +8,7 @@
   <description>ROS package for solo_hw_interface</description>
   <maintainer email="sjh2808@gmail.com">Jaehyun Shim</maintainer>
   <license>MIT</license>  <!-- TODO(JaehyunShim): Check what license will be used  -->
-  <url type="repository">https://github.com/JaehyunShim/solo</url>
+  <url type="repository">https://github.com/JaehyunShim/solo_ros</url>
   <author email="sjh2808@gmail.com">Jaehyun Shim</author>
 
   <buildtool_depend>catkin</buildtool_depend>

@@ -4,8 +4,8 @@
 - Ubuntu 20.04
 - RT_PREEMPT patch
 - ROS Noetic Ninjemys
-- Dependencies by rosdep
-- Dependencies in solo.rosinstall by rosinstall
+- Dependencies in package.xml files using rosdep
+- Dependencies in solo.rosinstall file using rosinstall
 
 ## Run
 ```sh
