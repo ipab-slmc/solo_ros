@@ -26,12 +26,6 @@ class SoloPlannerPy():
         self.model = pickle.load(open(traj_file_path, 'rb'))
         self._xs_ref = self.model['xs_ref']
         self._us_ref = self.model['us_ref']
-        # print(self.xs_ref)
-        # print(self.us_ref)
-        # print(len(self.xs_ref))
-        # print(len(self.us_ref))
-        # print(len(self.xs_ref[0]))
-        # print(len(self.us_ref[0]))
 
         # Robot Model
         self._k_p = 3.12
@@ -44,14 +38,18 @@ class SoloPlannerPy():
         # Trajectory iterator
         self._traj_idx = 0
 
-
+        # ROS publishers and subscribers
         self.joint_command_pub = rospy.Publisher(
             'solo_controller/joint_command', EffortFeedforwardWithJointFeedback, queue_size=10)
+        self.planner_start_sub = rospy.Subscriber(
+            'solo_controller/planner_start', Empty, self.planner_start_callback, queue_size = 10)
+
+        # To receive robot state from the controller
         # self.joint_states_sub = rospy.Subscriber(
         #     'solo_controller/joint_states', JointState, self.joint_state_callback, queue_size = 10)
         # self.imu_sub = rospy.Subscriber('imu', Imu, self.imu_callback, queue_size = 10)
-        self.planner_start_sub = rospy.Subscriber(
-            'solo_controller/planner_start', Empty, self.planner_start_callback, queue_size = 10)
+
+        # ROS timer
         self.timer = rospy.Timer(rospy.Duration(0.01), self.timer_callback)
 
     def planner_start_callback(self, data):
@@ -74,9 +72,8 @@ class SoloPlannerPy():
         #     self._us_ref[self._traj_idx]
 
         u = self._us_ref[self._traj_idx]
-
-        print(self._traj_idx)
         print(u)
+        print(self._traj_idx)
 
         msg = EffortFeedforwardWithJointFeedback()
         for i in range(len(u)):

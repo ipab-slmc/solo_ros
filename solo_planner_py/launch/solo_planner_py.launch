@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+  <node pkg="solo_planner_py" type="solo_planner_py" name="solo_planner_py" output="screen"/> 
+</launch>

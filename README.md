@@ -25,7 +25,8 @@ $ roslaunch solo_gazebo solo.launch
 $ roslaunch solo_gazebo solo_fixed.launch
 
 # Planner
-$ rosrun solo_planner solo_planner
+# $ rosrun solo_planner solo_planner
+$ roslaunch solo_planner_py solo_planner_py.launch
 
 # Rviz
 $ roslaunch solo_description solo_rviz.launch

@@ -16,7 +16,7 @@ catkin_install_python(PROGRAMS scripts/solo_planner_py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
-install(DIRECTORY resources
+install(DIRECTORY launch resources
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 

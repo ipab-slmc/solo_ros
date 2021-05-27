@@ -15,5 +15,6 @@
 
   <depend>ipab_controller_msgs</depend>
   <depend>rospy</depend>
+  <depend>std_msgs</depend>
 
 </package>
