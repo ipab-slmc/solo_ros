@@ -79,6 +79,8 @@ bool SoloController::init(
   //     root_nh, "tf", 10));
 
   // TODO(JaehyunShim): Need more consideration on the queue size
+  planner_start_pub = controller_nh.advertise<std_msgs::Empty>("planner_start", 1);
+
   rt_wb_state_pub_.reset(
     new realtime_tools::RealtimePublisher<whole_body_state_msgs::WholeBodyState>(
       controller_nh, "whole_body_state", 10));
@@ -174,6 +176,11 @@ void SoloController::update(const ros::Time & time, const ros::Duration & period
       vel_prev_[i] = vel_curr_[i];
     }
     update_onoff = true;
+
+    // Planner Start
+    std_msgs::Empty msg;
+    planner_start_pub.publish(msg);
+
     return;
   }
 
@@ -209,7 +216,7 @@ void SoloController::update(const ros::Time & time, const ros::Duration & period
   for (size_t i = 0; i < joint_size_; i++) {
     enforce_joint_limit(eff_cmd_[i], i);
     joint_handle_[i].setCommand(eff_cmd_[i]);
-    // ROS_INFO("%d joint command: %lf", i, eff_cmd_[i]);
+    ROS_INFO("%d joint command: %lf", i, eff_cmd_[i]);
   }
 
   // Publish joint_state data

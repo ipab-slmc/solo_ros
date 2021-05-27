@@ -12,6 +12,7 @@ set(dependencies
   pluginlib
   realtime_tools
   sensor_msgs
+  std_msgs
   tf2_msgs
   urdf
   whole_body_state_msgs

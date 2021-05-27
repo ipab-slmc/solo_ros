@@ -15,6 +15,7 @@
 #include <realtime_tools/realtime_publisher.h>
 #include <ros/ros.h>
 #include <sensor_msgs/JointState.h>
+#include <std_msgs/Empty.h>
 #include <solo_controller/SoloControllerConfig.h>
 #include <tf2_msgs/TFMessage.h>
 #include <urdf/model.h>
@@ -69,6 +70,9 @@ private:
   std::vector<whole_body_state_msgs::WholeBodyState> wb_state_traj_;
 
   // ROS Publisher
+  // Temp
+  ros::Publisher planner_start_pub;
+
   std::shared_ptr<realtime_tools::RealtimePublisher<sensor_msgs::JointState>> rt_joint_state_pub_;
   // std::shared_ptr<realtime_tools::RealtimePublisher<tf2_msgs::TFMessage>> rt_tf_pub_;
   std::shared_ptr<realtime_tools::RealtimePublisher<whole_body_state_msgs::WholeBodyState>>
