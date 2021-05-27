@@ -29,29 +29,29 @@ solo_controller:
     # Currently, PD gain can be tuned different for each motor (motor condition etc.)
     # Front Left
     FL_HAA:
-      pid: {p: 4.3, d: 0.43}
+      pid: {p: 0.0, d: 0.0}
     FL_HFE:
-      pid: {p: 0.27, d: 0.027}
+      pid: {p: 0.0, d: 0.0}
     FL_KFE:
-      pid: {p: 0.19, d: 0.019}
+      pid: {p: 0.0, d: 0.0}
     # Front Right
     FR_HAA:
-      pid: {p: 4.3, d: 0.43}
+      pid: {p: 0.0, d: 0.0}
     FR_HFE:
-      pid: {p: 0.27, d: 0.027}
+      pid: {p: 0.0, d: 0.0}
     FR_KFE:
-      pid: {p: 0.19, d: 0.019}
+      pid: {p: 0.0, d: 0.0}
     # Hind Left
     HL_HAA:
-      pid: {p: 4.3, d: 0.43}
+      pid: {p: 0.0, d: 0.0}
     HL_HFE:
-      pid: {p: 0.27, d: 0.027}
+      pid: {p: 0.0, d: 0.0}
     HL_KFE:
-      pid: {p: 0.19, d: 0.019}
+      pid: {p: 0.0, d: 0.0}
     # Hind Right
     HR_HAA:
-      pid: {p: 4.3, d: 0.43}
+      pid: {p: 0.0, d: 0.0}
     HR_HFE:
-      pid: {p: 0.27, d: 0.027}
+      pid: {p: 0.0, d: 0.0}
     HR_KFE:
-      pid: {p: 0.19, d: 0.019}
+      pid: {p: 0.0, d: 0.0}
