@@ -6,6 +6,11 @@
 - ROS Noetic Ninjemys
 - Dependencies in package.xml files using rosdep
 - Dependencies in solo.rosinstall file using rosinstall
+- Others
+  - pickle
+  ```sh
+  $ pip3 install pickle-mixin
+  ```
 
 ## Run
 ```sh

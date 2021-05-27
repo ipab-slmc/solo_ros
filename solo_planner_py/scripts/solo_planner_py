@@ -1,0 +1,101 @@
+#!/usr/bin/env python3
+#
+# TODO(JaehyunShim): Write copyright
+#
+# Copyright (c) 2021, University of Edinburgh
+#
+#
+# Check what license will be used.
+#
+#
+
+import numpy as np
+import pickle
+
+import rospkg
+import rospy
+from std_msgs.msg import Empty
+from ipab_controller_msgs.msg import EffortFeedforwardWithJointFeedback
+
+class SoloPlannerPy():
+    def __init__(self):
+        # Get path to the trajectory file
+        traj_file_path = rospkg.RosPack().get_path('solo_planner_py') + '/resources/ref_traj.p'
+
+        # Load Model
+        self.model = pickle.load(open(traj_file_path, 'rb'))
+        self._xs_ref = self.model['xs_ref']
+        self._us_ref = self.model['us_ref']
+        # print(self.xs_ref)
+        # print(self.us_ref)
+        # print(len(self.xs_ref))
+        # print(len(self.us_ref))
+        # print(len(self.xs_ref[0]))
+        # print(len(self.us_ref[0]))
+
+        # Robot Model
+        self._k_p = 3.12
+        self._k_d = 0.26172
+        self._robot = Robot()
+
+        # Planner Start onoff switch
+        self.onoff = False
+
+        # Trajectory iterator
+        self._traj_idx = 0
+
+
+        self.joint_command_pub = rospy.Publisher(
+            'solo_controller/joint_command', EffortFeedforwardWithJointFeedback, queue_size=10)
+        # self.joint_states_sub = rospy.Subscriber(
+        #     'solo_controller/joint_states', JointState, self.joint_state_callback, queue_size = 10)
+        # self.imu_sub = rospy.Subscriber('imu', Imu, self.imu_callback, queue_size = 10)
+        self.planner_start_sub = rospy.Subscriber(
+            'solo_controller/planner_start', Empty, self.planner_start_callback, queue_size = 10)
+        self.timer = rospy.Timer(rospy.Duration(0.01), self.timer_callback)
+
+    def planner_start_callback(self, data):
+        self.onoff = True
+
+    def timer_callback(self, event):
+        if self.onoff == True:
+            self.step()
+            self._traj_idx += 1
+            if self._traj_idx == len(self._us_ref):
+                self._traj_idx = 0
+        else:
+            print("Waiting for controller to start")
+
+    # Reference: Traiko's email
+    def step(self):
+        # dx = self._croc_state.diff(np.hstack([self._robot._q, self._robot._v]), self._xs_ref[self._traj_idx])
+        # u = self._k_p * dx[6:18] + \
+        #     self._k_d * dx[24:] + \
+        #     self._us_ref[self._traj_idx]
+
+        u = self._us_ref[self._traj_idx]
+
+        print(self._traj_idx)
+        print(u)
+
+        msg = EffortFeedforwardWithJointFeedback()
+        for i in range(len(u)):
+            msg.positions.append(u[i])
+            msg.velocities.append(u[i])
+            msg.efforts.append(u[i])
+
+        self.joint_command_pub.publish(msg)
+
+# TODO(JaehyuNShim): Is this the right way of creating a struct in python?
+class Robot():
+    def __init__(self):
+        self._q = 0.0
+        self._v = 0.0
+
+if __name__ == '__main__':
+    try:
+        rospy.init_node('solo_planner_py')
+        solo_planner_py = SoloPlannerPy()
+        rospy.spin()
+    except rospy.ROSInterruptException:
+        pass
