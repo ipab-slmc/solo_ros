@@ -12,28 +12,35 @@
 import numpy as np
 import pickle
 
+import crocoddyl
+import example_robot_data
 import rospkg
 import rospy
 from std_msgs.msg import Empty
 from ipab_controller_msgs.msg import EffortFeedforwardWithJointFeedback
 
+# Reference: https://github.com/loco-3d/crocoddyl/blob/master/examples/notebooks/introduction_to_crocoddyl.ipynb
 class SoloPlannerPy():
     def __init__(self):
-        # Get path to the trajectory file
-        traj_file_path = rospkg.RosPack().get_path('solo_planner_py') + '/resources/ref_traj.p'
-
-        # Load Model
-        self.model = pickle.load(open(traj_file_path, 'rb'))
-        self._xs_ref = self.model['xs_ref']
-        self._us_ref = self.model['us_ref']
-
         # Robot Model
+        solo12 = example_robot_data.load('solo12')
+        robot_model = solo12.model
+        self._croc_state = crocoddyl.StateMultibody(robot_model)
         self._k_p = 3.12
         self._k_d = 0.26172
         self._robot = Robot()
 
+        # Get path to the trajectory file
+        traj_file_path = rospkg.RosPack().get_path('solo_planner_py') + '/resources/ref_traj.p'
+
+        # Load ref data
+        self.traj = pickle.load(open(traj_file_path, 'rb'))
+        self._xs_ref = self.traj['xs_ref']
+        self._us_ref = self.traj['us_ref']
+
         # Planner Start onoff switch
-        self.onoff = False
+        # self.onoff = False
+        self.onoff = True
 
         # Trajectory iterator
         self._traj_idx = 0
@@ -66,7 +73,7 @@ class SoloPlannerPy():
 
     # Reference: Traiko's email
     def step(self):
-        # dx = self._croc_state.diff(np.hstack([self._robot._q, self._robot._v]), self._xs_ref[self._traj_idx])
+        dx = self._croc_state.diff(np.hstack([self._robot._q, self._robot._v]), self._xs_ref[self._traj_idx])
         # u = self._k_p * dx[6:18] + \
         #     self._k_d * dx[24:] + \
         #     self._us_ref[self._traj_idx]
@@ -86,8 +93,8 @@ class SoloPlannerPy():
 # TODO(JaehyuNShim): Is this the right way of creating a struct in python?
 class Robot():
     def __init__(self):
-        self._q = 0.0
-        self._v = 0.0
+        self._q = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+        self._v = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
 
 if __name__ == '__main__':
     try:

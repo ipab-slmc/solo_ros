@@ -11,6 +11,7 @@
   ```sh
   $ pip3 install pickle-mixin
   ```
+  - crocoddyl (https://github.com/loco-3d/crocoddyl#installation-through-robotpkg)
 
 ## Run
 ```sh
