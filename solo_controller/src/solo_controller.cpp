@@ -99,13 +99,14 @@ bool SoloController::init(
   joint_command_buffer.positions.resize(joint_size_);
   joint_command_buffer.velocities.resize(joint_size_);
   joint_command_buffer.efforts.resize(joint_size_);
+  joint_command_buffer.position_gains.resize(joint_size_);
+  joint_command_buffer.velocity_gains.resize(joint_size_);
   for (size_t i = 0; i < joint_size_; i++) {
     joint_command_buffer.positions[i] = 0.0;
     joint_command_buffer.velocities[i] = 0.0;
     joint_command_buffer.efforts[i] = 0.0;
-    // TODO(JaehyunShim)
-    // joint_command_buffer.position_gains[i] = 0.0;
-    // joint_command_buffer.velocity_gains[i] = 0.0;
+    joint_command_buffer.position_gains[i] = 0.0;
+    joint_command_buffer.velocity_gains[i] = 0.0;
   }
   joint_command_buffer_.writeFromNonRT(joint_command_buffer);
 
@@ -192,9 +193,8 @@ void SoloController::update(const ros::Time & time, const ros::Duration & period
     pos_ref_[i] = joint_command_buffer.positions[i];
     vel_ref_[i] = joint_command_buffer.velocities[i];
     eff_ref_[i] = joint_command_buffer.efforts[i];
-    // TODO(JaehyunShim)
-    // kp_[i] = joint_command_buffer.position_gains[i];
-    // kd_[i] = joint_command_buffer.velocity_gains[i];
+    kp_[i] = joint_command_buffer.position_gains[i];
+    kd_[i] = joint_command_buffer.velocity_gains[i];
   }
 
   // TODO(Jaehyun): Interpolate received reference data if needed
@@ -202,8 +202,8 @@ void SoloController::update(const ros::Time & time, const ros::Duration & period
   // Compute effort command
   for (size_t i = 0; i < joint_size_; i++) {
     eff_cmd_[i] = eff_ref_[i] +
-      kp_[i] * (vel_ref_[i] - vel_prev_[i]) +
-      kd_[i] * (pos_ref_[i] - pos_prev_[i]);
+      kp_[i] * (pos_ref_[i] - pos_prev_[i]) +
+      kd_[i] * (vel_ref_[i] - vel_prev_[i]);
   }
 
   // Save previous position and velocity
@@ -229,14 +229,14 @@ void SoloController::update(const ros::Time & time, const ros::Duration & period
   }
 
   // Update parameters
-  for (size_t i = 0; i < joint_size_; i++) {
-    solo_controller::SoloControllerConfig solo_controller_config =
-      *(solo_controller_config_[i].readFromRT());
-    kp_[i] = solo_controller_config.p;
-    kd_[i] = solo_controller_config.d;
-    // ROS_INFO("%d joint kp_: %lf", i, kp_[i]);
-    // ROS_INFO("%d joint kd_: %lf", i, kd_[i]);
-  }
+  // for (size_t i = 0; i < joint_size_; i++) {
+  //   solo_controller::SoloControllerConfig solo_controller_config =
+  //     *(solo_controller_config_[i].readFromRT());
+  //   kp_[i] = solo_controller_config.p;
+  //   kd_[i] = solo_controller_config.d;
+  //   // ROS_INFO("%d joint kp_: %lf", i, kp_[i]);
+  //   // ROS_INFO("%d joint kd_: %lf", i, kd_[i]);
+  // }
 
   // Publish tf
   // TODO(Jaehyun): Do proper TF calc

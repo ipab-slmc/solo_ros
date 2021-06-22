@@ -12,7 +12,7 @@
 import numpy as np
 import pickle
 
-import crocoddyl
+# import crocoddyl
 import example_robot_data
 import rospkg
 import rospy
@@ -25,10 +25,10 @@ class SoloPlannerPy():
         # Robot Model
         solo12 = example_robot_data.load('solo12')
         robot_model = solo12.model
-        self._croc_state = crocoddyl.StateMultibody(robot_model)
+        # self._croc_state = crocoddyl.StateMultibody(robot_model)
         self._k_p = 3.12
         self._k_d = 0.26172
-        self._robot = Robot()
+        # self._robot = Robot()
 
         # Get path to the trajectory file
         traj_file_path = rospkg.RosPack().get_path('solo_planner_py') + '/resources/ref_traj.p'
@@ -51,11 +51,6 @@ class SoloPlannerPy():
         self.planner_start_sub = rospy.Subscriber(
             'solo_controller/planner_start', Empty, self.planner_start_callback, queue_size = 10)
 
-        # To receive robot state from the controller
-        # self.joint_states_sub = rospy.Subscriber(
-        #     'solo_controller/joint_states', JointState, self.joint_state_callback, queue_size = 10)
-        # self.imu_sub = rospy.Subscriber('imu', Imu, self.imu_callback, queue_size = 10)
-
         # ROS timer
         self.timer = rospy.Timer(rospy.Duration(0.01), self.timer_callback)
 
@@ -64,6 +59,7 @@ class SoloPlannerPy():
 
     def timer_callback(self, event):
         if self.onoff == True:
+            print(self._traj_idx)
             self.step()
             self._traj_idx += 1
             if self._traj_idx == len(self._us_ref):
@@ -71,30 +67,14 @@ class SoloPlannerPy():
         else:
             print("Waiting for controller to start")
 
-    # Reference: Traiko's email
     def step(self):
-        dx = self._croc_state.diff(np.hstack([self._robot._q, self._robot._v]), self._xs_ref[self._traj_idx])
-        # u = self._k_p * dx[6:18] + \
-        #     self._k_d * dx[24:] + \
-        #     self._us_ref[self._traj_idx]
-
-        u = self._us_ref[self._traj_idx]
-        print(u)
-        print(self._traj_idx)
-
         msg = EffortFeedforwardWithJointFeedback()
-        for i in range(len(u)):
-            msg.positions.append(u[i])
-            msg.velocities.append(u[i])
-            msg.efforts.append(u[i])
-
+        msg.positions = self._xs_ref[self._traj_idx][7:19]
+        msg.velocities = self._xs_ref[self._traj_idx][25:]
+        msg.efforts = self._us_ref[self._traj_idx]
+        msg.position_gains = np.ones(12) * self._k_p
+        msg.velocity_gains = np.ones(12) * self._k_d
         self.joint_command_pub.publish(msg)
-
-# TODO(JaehyuNShim): Is this the right way of creating a struct in python?
-class Robot():
-    def __init__(self):
-        self._q = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
-        self._v = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
 
 if __name__ == '__main__':
     try:
