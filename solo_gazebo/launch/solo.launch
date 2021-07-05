@@ -21,7 +21,7 @@
   <!-- Spawn the robot model -->
   <node pkg="gazebo_ros" type="spawn_model" name="spawn_model" respawn="false" output="screen"
      args="-urdf -model $(arg robot) -param robot_description
-     -x 0.0 -y 0.0 -z 0.35 -R 0.0 -P 0.0 -Y 0.0
+     -x 0.0 -y 0.0 -z 0.335 -R 0.0 -P 0.0 -Y 0.0
      -J FL_HAA 0.0 -J FL_HFE 0.0 -J FL_KFE 0.0
      -J FR_HAA 0.0 -J FR_HFE 0.0 -J FR_KFE 0.0
      -J HL_HAA 0.0 -J HL_HFE 0.0 -J HL_KFE 0.0
