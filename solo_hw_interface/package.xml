@@ -16,6 +16,8 @@
   <depend>controller_manager</depend>
   <depend>hardware_interface</depend>
   <depend>imu_sensor_controller</depend>
+  <depend>ros_control</depend>
+  <depend>ros_controllers</depend>
   <depend>solo_driver</depend>
   <depend>urdf</depend>
 
