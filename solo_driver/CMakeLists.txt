@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS ${dependencies})
 # Build
 catkin_package(
   INCLUDE_DIRS include
+  LIBRARIES solo_driver
   CATKIN_DEPENDS ${dependencies})
 
 include_directories(

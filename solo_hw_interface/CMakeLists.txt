@@ -26,8 +26,8 @@ include_directories(
 add_executable(solo_control_node
   src/solo_control_node.cpp
   src/solo_hw_interface.cpp)
-add_dependencies(solo_control_node ${catkin_EXPORTED_TARGETS} ${${PROJECT_NAME}_EXPORTED_TARGETS})
-target_link_libraries(solo_control_node ${catkin_LIBRARIES} solo_driver)  # why solo_driver comes here?
+add_dependencies(solo_control_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(solo_control_node ${catkin_LIBRARIES})
 
 # Install
 install(TARGETS solo_control_node
