@@ -8,20 +8,21 @@ set(dependencies
   sensor_msgs  # Temp
 )
 find_package(catkin REQUIRED COMPONENTS ${dependencies})
+find_package(Eigen3 REQUIRED)
 find_package(master_board_sdk REQUIRED)
 find_package(odri_control_interface REQUIRED)
-find_package(Eigen3 REQUIRED)
 
 # Build
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME}
   CATKIN_DEPENDS ${dependencies}
-  DEPENDS odri_control_interface master_board_sdk EIGEN3)
+  DEPENDS EIGEN3 master_board_sdk odri_control_interface)
 
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
+  ${master_board_sdk_INCLUDE_DIRS}
   ${odri_control_interface_INCLUDE_DIRS}
   ${EIGEN3_INCLUDE_DIRS}
 )
@@ -29,7 +30,11 @@ include_directories(
 add_library(${PROJECT_NAME}
   src/solo_driver.cpp)
 add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
+target_link_libraries(${PROJECT_NAME}
+  ${catkin_LIBRARIES}
+  Eigen3::Eigen
+  master_board_sdk::master_board_sdk
+  odri_control_interface::odri_control_interface)
 
 # Install
 install(TARGETS ${PROJECT_NAME}

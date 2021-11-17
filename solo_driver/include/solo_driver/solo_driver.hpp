@@ -36,11 +36,11 @@
 #include <memory>
 #include <vector>
 
-#include "odri_control_interface/utils.hpp"
-#include "odri_control_interface/imu.hpp"
-#include "odri_control_interface/calibration.hpp"
-#include "odri_control_interface/robot.hpp"
 #include "master_board_sdk/master_board_interface.h"
+#include "odri_control_interface/calibration.hpp"
+#include "odri_control_interface/imu.hpp"
+#include "odri_control_interface/robot.hpp"
+#include "odri_control_interface/utils.hpp"
 
 namespace solo_driver
 {
@@ -69,9 +69,31 @@ private:
   uint8_t joint_size_;
   std::vector<double> pos_;
   std::vector<double> vel_;
+  std::vector<double> eff_;
+
+  Eigen::VectorXd eff_cmd_;
 
   // IMU
   sensor_msgs::Imu imu_;
+
+  // Robot
+  std::string eth_interface_;
+
+  Eigen::VectorXi motor_numbers_;
+  Eigen::VectorXd motor_reversed_polarities_;
+  Eigen::VectorXd joint_lower_limits_;
+  Eigen::VectorXd joint_upper_limits_;
+  Eigen::VectorXd position_offsets_;
+
+  double motor_constants_;
+  double gear_ratios_;
+  double max_currents_;
+  double max_joint_velocities_;
+  double safety_damping_;
+
+  std::shared_ptr<odri_control_interface::Robot> robot_;
+  std::shared_ptr<odri_control_interface::JointModules> joint_;
+  std::shared_ptr<MasterBoardInterface> master_board_;
 };
 
 }  // namespace solo_driver
