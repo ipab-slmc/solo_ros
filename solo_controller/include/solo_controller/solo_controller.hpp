@@ -1,11 +1,29 @@
-// TODO(JaehyunShim): Write copyright
-//
-// Copyright (c) 2021, University of Edinburgh
-//
-//
-// Check what license will be used.
-//
-//
+// Copyright 2021 University of Edinburgh
+// All rights reserved.
+
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+
+//  * Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
+//  * Redistributions in binary form must reproduce the above copyright
+//    notice, this list of conditions and the following disclaimer in the
+//    documentation and/or other materials provided with the distribution.
+//  * Neither the name of  nor the names of its contributors may be used to
+//    endorse or promote products derived from this software without specific
+//    prior written permission.
+
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #include <controller_interface/controller.h>
 #include <dynamic_reconfigure/server.h>
@@ -35,13 +53,15 @@ class SoloController
   : public controller_interface::Controller<hardware_interface::EffortJointInterface>
 {
 public:
-  SoloController() {}
-  ~SoloController() {}
+  SoloController()
+  {
+  }
+  ~SoloController()
+  {
+  }
 
-  bool init(
-    hardware_interface::EffortJointInterface * robot_hw,
-    ros::NodeHandle & root_nh,
-    ros::NodeHandle & controller_nh);
+  bool init(hardware_interface::EffortJointInterface * robot_hw, ros::NodeHandle & root_nh,
+            ros::NodeHandle & controller_nh);
   void starting(const ros::Time & time);
   void update(const ros::Time & time, const ros::Duration & period);
   void stopping(const ros::Time & time);
@@ -76,29 +96,28 @@ private:
   std::shared_ptr<realtime_tools::RealtimePublisher<sensor_msgs::JointState>> rt_joint_state_pub_;
   // std::shared_ptr<realtime_tools::RealtimePublisher<tf2_msgs::TFMessage>> rt_tf_pub_;
   std::shared_ptr<realtime_tools::RealtimePublisher<whole_body_state_msgs::WholeBodyState>>
-  rt_wb_state_pub_;
+      rt_wb_state_pub_;
   std::shared_ptr<realtime_tools::RealtimePublisher<whole_body_state_msgs::WholeBodyTrajectory>>
-  rt_wb_traj_pub_;
+      rt_wb_traj_pub_;
 
   // ROS Subscriber
   realtime_tools::RealtimeBuffer<ipab_controller_msgs::EffortFeedforwardWithJointFeedback>
-  joint_command_buffer_;
+      joint_command_buffer_;
   ros::Subscriber joint_command_sub_;
   void joint_command_callback(
-    const ipab_controller_msgs::EffortFeedforwardWithJointFeedback::ConstPtr & msg)
+      const ipab_controller_msgs::EffortFeedforwardWithJointFeedback::ConstPtr & msg)
   {
     joint_command_buffer_.writeFromNonRT(*msg);
   }
 
   // ROS Dynamic Reconfigure Server
   std::vector<std::shared_ptr<dynamic_reconfigure::Server<solo_controller::SoloControllerConfig>>>
-  dyn_reconf_server_;
+      dyn_reconf_server_;
   boost::recursive_mutex dyn_reconf_mutex_;
   std::vector<realtime_tools::RealtimeBuffer<solo_controller::SoloControllerConfig>>
-  solo_controller_config_;
-  void dyn_reconf_callback(
-    solo_controller::SoloControllerConfig & solo_controller_config,
-    uint32_t /*level*/, uint8_t index)
+      solo_controller_config_;
+  void dyn_reconf_callback(solo_controller::SoloControllerConfig & solo_controller_config,
+                           uint32_t /*level*/, uint8_t index)
   {
     solo_controller_config_[index].writeFromNonRT(solo_controller_config);
   }
@@ -108,9 +127,10 @@ private:
   void enforce_joint_limit(double & cmd, uint8_t index)
   {
     if (joint_urdf_[index]->type == urdf::Joint::REVOLUTE ||
-      joint_urdf_[index]->type == urdf::Joint::PRISMATIC)
+        joint_urdf_[index]->type == urdf::Joint::PRISMATIC)
     {
-      if (std::abs(cmd) > joint_urdf_[index]->limits->effort) {
+      if (std::abs(cmd) > joint_urdf_[index]->limits->effort)
+      {
         cmd = joint_urdf_[index]->limits->effort * (cmd / std::abs(cmd));
       }
     }

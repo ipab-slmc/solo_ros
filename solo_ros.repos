@@ -1,0 +1,21 @@
+repositories:
+  master-board:
+    type: git
+    url: https://github.com/ipab-slmc/master-board
+    version: master
+  odri_control_interface:
+    type: git
+    url: https://github.com/ipab-slmc/odri_control_interface
+    version: main
+  ipab_controller_msgs:
+    type: git
+    url: https://github.com/ipab-slmc/ipab_controller_msgs.git
+    version: master
+  whole_body_state_msgs:
+    type: git
+    url: https://github.com/loco-3d/whole_body_state_msgs.git
+    version: master
+  whole_body_state_rviz_plugin:
+    type: git
+    url: https://github.com/loco-3d/whole_body_state_rviz_plugin.git
+    version: master

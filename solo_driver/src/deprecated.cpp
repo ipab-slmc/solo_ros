@@ -41,7 +41,6 @@
 // }
 // }  // namespace solo_driver
 
-
 // SoloDriver::solo_driver()
 // {
 //   // Init robot frontend
@@ -87,8 +86,8 @@
 //   action.print(false);  // set to true if you want to print action
 // }
 
-
-// Reference: https://github.com/open-dynamic-robot-initiative/robot_interfaces/blob/master/demos/types.hpp
+// Reference:
+// https://github.com/open-dynamic-robot-initiative/robot_interfaces/blob/master/demos/types.hpp
 // class Action
 // {
 // public:
@@ -107,7 +106,8 @@
 //   }
 // };
 
-// Reference: https://github.com/open-dynamic-robot-initiative/robot_interfaces/blob/master/demos/types.hpp
+// Reference:
+// https://github.com/open-dynamic-robot-initiative/robot_interfaces/blob/master/demos/types.hpp
 // class Observation
 // {
 // public:

@@ -1,11 +1,29 @@
-// TODO(JaehyunShim): Write copyright
-//
-// Copyright (c) 2021, University of Edinburgh
-//
-//
-// Check what license will be used.
-//
-//
+// Copyright 2021 University of Edinburgh
+// All rights reserved.
+
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+
+//  * Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
+//  * Redistributions in binary form must reproduce the above copyright
+//    notice, this list of conditions and the following disclaimer in the
+//    documentation and/or other materials provided with the distribution.
+//  * Neither the name of  nor the names of its contributors may be used to
+//    endorse or promote products derived from this software without specific
+//    prior written permission.
+
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #include <map>
 #include <memory>
@@ -20,22 +38,25 @@ bool SoloHwInterface::init(ros::NodeHandle & root_nh, ros::NodeHandle & robot_hw
 {
   // Get joint names from URDF
   urdf::Model urdf;
-  if (!urdf.initParamWithNodeHandle("robot_description", root_nh)) {
+  if (!urdf.initParamWithNodeHandle("robot_description", root_nh))
+  {
     ROS_ERROR("Failed to parse URDF");
     return false;
   }
 
   for (std::map<std::string, std::shared_ptr<urdf::Joint>>::iterator i = urdf.joints_.begin();
-    i != urdf.joints_.end(); i++)
+       i != urdf.joints_.end(); i++)
   {
     std::shared_ptr<urdf::Joint> joint_urdf = i->second;
-    if (joint_urdf->type == urdf::Joint::REVOLUTE) {
+    if (joint_urdf->type == urdf::Joint::REVOLUTE)
+    {
       joint_name_.emplace_back(i->first);
     }
   }
 
   joint_size_ = joint_name_.size();
-  for (size_t i = 0; i < joint_size_; i++) {
+  for (size_t i = 0; i < joint_size_; i++)
+  {
     printf("Joint name: %s \n", joint_name_[i].c_str());
   }
   pos_.resize(joint_size_);
@@ -49,32 +70,29 @@ bool SoloHwInterface::init(ros::NodeHandle & root_nh, ros::NodeHandle & robot_hw
   solo_driver_ = std::make_shared<solo_driver::SoloDriver>();
   solo_driver_->init(joint_size_);
 
-  // Reference: https://github.com/ros-simulation/gazebo_ros_pkgs/blob/kinetic-devel/gazebo_ros_control/src/default_robot_hw_sim.cpp
-  for (size_t i = 0; i < joint_size_; i++) {
+  // Reference:
+  // https://github.com/ros-simulation/gazebo_ros_pkgs/blob/kinetic-devel/gazebo_ros_control/src/default_robot_hw_sim.cpp
+  for (size_t i = 0; i < joint_size_; i++)
+  {
     // Register joint state handle
-    joint_state_interface_.registerHandle(
-      hardware_interface::JointStateHandle(
+    joint_state_interface_.registerHandle(hardware_interface::JointStateHandle(
         joint_name_.at(i), &pos_.at(i), &vel_.at(i), &eff_.at(i)));
 
     // Register joint position command handle
-    pos_joint_interface_.registerHandle(
-      hardware_interface::JointHandle(
+    pos_joint_interface_.registerHandle(hardware_interface::JointHandle(
         joint_state_interface_.getHandle(joint_name_.at(i)), &pos_cmd_.at(i)));
 
     // Register joint velocity command handle
-    vel_joint_interface_.registerHandle(
-      hardware_interface::JointHandle(
+    vel_joint_interface_.registerHandle(hardware_interface::JointHandle(
         joint_state_interface_.getHandle(joint_name_.at(i)), &vel_cmd_.at(i)));
 
     // Register joint effort command handle
-    eff_joint_interface_.registerHandle(
-      hardware_interface::JointHandle(
+    eff_joint_interface_.registerHandle(hardware_interface::JointHandle(
         joint_state_interface_.getHandle(joint_name_.at(i)), &eff_cmd_.at(i)));
   }
   // Register imu handle
   // TODO(JaehyunShim): If needed, allow users to set name, frame_id at runtime
-  imu_interface_.registerHandle(
-    hardware_interface::ImuSensorHandle(
+  imu_interface_.registerHandle(hardware_interface::ImuSensorHandle(
       "imu", "base_link", ori_, ori_cov_, ang_vel_, ang_vel_cov_, lin_acc_, lin_acc_cov_));
 
   // Register joint interfaces
@@ -105,7 +123,8 @@ void SoloHwInterface::read()
   lin_acc_[0] = imu_.linear_acceleration.x;
   lin_acc_[1] = imu_.linear_acceleration.y;
   lin_acc_[2] = imu_.linear_acceleration.z;
-  for (size_t i = 0; i < 9; i++) {
+  for (size_t i = 0; i < 9; i++)
+  {
     ori_cov_[i] = imu_.orientation_covariance[i];
     ang_vel_cov_[i] = imu_.angular_velocity_covariance[i];
     lin_acc_cov_[i] = imu_.linear_acceleration_covariance[i];

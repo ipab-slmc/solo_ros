@@ -1,11 +1,29 @@
-// TODO(JaehyunShim): Write copyright
-//
-// Copyright (c) 2021, University of Edinburgh
-//
-//
-// Check what license will be used.
-//
-//
+// Copyright 2021 University of Edinburgh
+// All rights reserved.
+
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+
+//  * Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
+//  * Redistributions in binary form must reproduce the above copyright
+//    notice, this list of conditions and the following disclaimer in the
+//    documentation and/or other materials provided with the distribution.
+//  * Neither the name of  nor the names of its contributors may be used to
+//    endorse or promote products derived from this software without specific
+//    prior written permission.
+
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #include <string>
 #include <vector>
@@ -14,8 +32,7 @@
 
 namespace solo_planner
 {
-SoloPlanner::SoloPlanner()
-: nh_("")
+SoloPlanner::SoloPlanner() : nh_("")
 {
   // Get joint names
   // TODO(JaehyunShim): Check how to get joint names from planner lib
@@ -36,7 +53,8 @@ SoloPlanner::SoloPlanner()
   joint_name_.emplace_back("HR_KFE");
   joint_size_ = joint_name_.size();
 
-  for (size_t i = 0; i < joint_size_; i++) {
+  for (size_t i = 0; i < joint_size_; i++)
+  {
     kp_.emplace_back(0.0);
     kd_.emplace_back(0.0);
     pos_curr_.emplace_back(0.0);
@@ -48,16 +66,15 @@ SoloPlanner::SoloPlanner()
 
   // Initialize ROS publishers
   // TODO(JaehyunShim): Need more consideration on the queue size
-  rt_joint_command_pub_.reset(
-    new realtime_tools::RealtimePublisher<ipab_controller_msgs::EffortFeedforwardWithJointFeedback>(
+  rt_joint_command_pub_.reset(new realtime_tools::RealtimePublisher<
+                              ipab_controller_msgs::EffortFeedforwardWithJointFeedback>(
       nh_, "/solo_controller/joint_command", 10));
 
   // Initialize ROS subscribers
   // TODO(JaehyunShim): Need more consideration on the queue size
   joint_state_sub_ = nh_.subscribe<sensor_msgs::JointState>(
-    "/solo_controller/joint_states", 10, &SoloPlanner::joint_state_callback, this);
-  imu_sub_ = nh_.subscribe<sensor_msgs::Imu>(
-    "imu", 10, &SoloPlanner::imu_callback, this);
+      "/solo_controller/joint_states", 10, &SoloPlanner::joint_state_callback, this);
+  imu_sub_ = nh_.subscribe<sensor_msgs::Imu>("imu", 10, &SoloPlanner::imu_callback, this);
 
   // TODO(JaehyunShim): Consider if just emplace_back will be better
   sensor_msgs::JointState joint_state_buffer;
@@ -65,7 +82,8 @@ SoloPlanner::SoloPlanner()
   joint_state_buffer.position.resize(joint_size_);
   joint_state_buffer.velocity.resize(joint_size_);
   joint_state_buffer.effort.resize(joint_size_);
-  for (size_t i = 0; i < joint_size_; i++) {
+  for (size_t i = 0; i < joint_size_; i++)
+  {
     joint_state_buffer.name[i] = joint_name_[i];
     joint_state_buffer.position[i] = 0.0;
     joint_state_buffer.velocity[i] = 0.0;
@@ -93,9 +111,9 @@ SoloPlanner::SoloPlanner()
 void SoloPlanner::timer_callback(const ros::TimerEvent & te)
 {
   // Get current position, velocity from the solo_controller
-  sensor_msgs::JointState joint_state_buffer =
-    *(joint_state_buffer_.readFromRT());
-  for (size_t i = 0; i < joint_size_; i++) {
+  sensor_msgs::JointState joint_state_buffer = *(joint_state_buffer_.readFromRT());
+  for (size_t i = 0; i < joint_size_; i++)
+  {
     pos_curr_[i] = joint_state_buffer.position[i];
     vel_curr_[i] = joint_state_buffer.velocity[i];
   }
@@ -113,7 +131,8 @@ void SoloPlanner::timer_callback(const ros::TimerEvent & te)
   // ------------------------------------------------------------------------------------------
 
   // Publish joint_command data
-  if (rt_joint_command_pub_->trylock()) {
+  if (rt_joint_command_pub_->trylock())
+  {
     // TODO(JaehyunShim): See how readFromRT works.
     // If time stamp is used in the process, add timestamp to ipab_controller_msgs
     rt_joint_command_pub_->msg_.name = joint_name_;

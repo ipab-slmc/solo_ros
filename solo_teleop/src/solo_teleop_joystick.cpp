@@ -1,19 +1,35 @@
-// TODO(JaehyunShim): Write copyright
-//
-// Copyright (c) 2021, University of Edinburgh
-//
-//
-// Check what license will be used.
-//
-//
+// Copyright 2021 University of Edinburgh
+// All rights reserved.
+
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+
+//  * Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
+//  * Redistributions in binary form must reproduce the above copyright
+//    notice, this list of conditions and the following disclaimer in the
+//    documentation and/or other materials provided with the distribution.
+//  * Neither the name of  nor the names of its contributors may be used to
+//    endorse or promote products derived from this software without specific
+//    prior written permission.
+
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #include "solo_teleop/solo_teleop_joystick.hpp"
 
 namespace solo_teleop
 {
-SoloTeleopJoystick::SoloTeleopJoystick()
-: nh_(""),
-  private_nh_("~")
+SoloTeleopJoystick::SoloTeleopJoystick() : nh_(""), private_nh_("~")
 {
   // Init ROS parameter
   // TODO(JaehyunShim): Reset default values.
@@ -60,32 +76,47 @@ void SoloTeleopJoystick::joy_callback(const sensor_msgs::Joy::ConstPtr & msg)
 
   // TODO(JaehyunShim): Key recheck needed
 
-  if (msg->axes.at(3) <= -0.9) {  // Boost x, y direction speed
+  if (msg->axes.at(3) <= -0.9)
+  {  // Boost x, y direction speed
   }
 
-
-  if (msg->axes.at(3) <= -0.9) {  // Boost yaw direction speed
+  if (msg->axes.at(3) <= -0.9)
+  {  // Boost yaw direction speed
   }
 
-  if (msg->axes.at(1) >= 0.9) {  // Move in x direction
+  if (msg->axes.at(1) >= 0.9)
+  {  // Move in x direction
     send_cmd_vel(1.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-  } else if (msg->axes.at(1) <= -0.9) {
+  }
+  else if (msg->axes.at(1) <= -0.9)
+  {
     send_cmd_vel(-1.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-  } else if (msg->axes.at(0) >= 0.9) {  // Move in y direction
+  }
+  else if (msg->axes.at(0) >= 0.9)
+  {  // Move in y direction
     send_cmd_vel(0.0, 1.0, 0.0, 0.0, 0.0, 0.0);
-  } else if (msg->axes.at(0) <= -0.9) {
+  }
+  else if (msg->axes.at(0) <= -0.9)
+  {
     send_cmd_vel(0.0, -1.0, 0.0, 0.0, 0.0, 0.0);
-  } else if (msg->axes.at(6) == -1.0) {  // Move in yaw direction
+  }
+  else if (msg->axes.at(6) == -1.0)
+  {  // Move in yaw direction
     send_cmd_vel(0.0, 0.0, 0.0, 0.0, 0.0, 1.0);
-  } else if (msg->axes.at(6) == -1.0) {
+  }
+  else if (msg->axes.at(6) == -1.0)
+  {
     send_cmd_vel(0.0, 0.0, 0.0, 0.0, 0.0, -1.0);
-  } else if (msg->buttons.at(0) == 1) {  // Stop
+  }
+  else if (msg->buttons.at(0) == 1)
+  {  // Stop
     send_cmd_vel(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
   }
 
   // Print keyboard operation every 10 commands
   count += 1;
-  if (count == 10) {
+  if (count == 10)
+  {
     print_joyop();
     count = 0;
   }
@@ -109,9 +140,8 @@ void SoloTeleopJoystick::print_joyop()
 // TODO(JaehyunShim): Add smoother
 
 // TODO(JaehyunShim): why has to be reference, not pointer..?
-void SoloTeleopJoystick::send_cmd_vel(
-  double vel_lin_x, double vel_lin_y, double vel_lin_z,
-  double vel_ang_x, double vel_ang_y, double vel_ang_z)
+void SoloTeleopJoystick::send_cmd_vel(double vel_lin_x, double vel_lin_y, double vel_lin_z,
+                                      double vel_ang_x, double vel_ang_y, double vel_ang_z)
 {
   // Enforce velocity limit
   geometry_msgs::Twist cmd_vel_msg;
@@ -133,7 +163,8 @@ void SoloTeleopJoystick::send_cmd_vel(
 
 double SoloTeleopJoystick::enforce_vel_limit(double vel, double limit)
 {
-  if (std::abs(vel) > limit) {
+  if (std::abs(vel) > limit)
+  {
     vel = limit * (vel / std::abs(vel));
   }
   return vel;

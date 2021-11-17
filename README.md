@@ -1,9 +1,14 @@
-# SOLO ROS
+# Solo ROS
 
-## Install
+The Solo ROS is a set of ROS interfaces for the [Solo12](https://open-dynamic-robot-initiative.github.io/) platform.
+
+## Prerequisites
 - Ubuntu 20.04
-- RT_PREEMPT patch
 - ROS Noetic Ninjemys
+- [rosdep](http://wiki.ros.org/rosdep)
+- [vcstool](http://wiki.ros.org/vcstool)
+
+## Installation
 - Dependencies in package.xml files using rosdep
 - Dependencies in solo.rosinstall file using rosinstall
 - Others

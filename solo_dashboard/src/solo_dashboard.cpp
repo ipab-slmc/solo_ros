@@ -1,11 +1,29 @@
-// TODO(JaehyunShim): Write copyright
-//
-// Copyright (c) 2021, University of Edinburgh
-//
-//
-// Check what license will be used.
-//
-//
+// Copyright 2021 University of Edinburgh
+// All rights reserved.
+
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+
+//  * Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
+//  * Redistributions in binary form must reproduce the above copyright
+//    notice, this list of conditions and the following disclaimer in the
+//    documentation and/or other materials provided with the distribution.
+//  * Neither the name of  nor the names of its contributors may be used to
+//    endorse or promote products derived from this software without specific
+//    prior written permission.
+
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #include <QStringList>
 
@@ -20,9 +38,9 @@
 namespace solo_dashboard
 {
 SoloDashboard::SoloDashboard()
-: rqt_gui_cpp::Plugin(),
-  widget_(0),
-  solo_dashboard_node_(std::make_shared<solo_dashboard::Rosnode>())
+  : rqt_gui_cpp::Plugin()
+  , widget_(0)
+  , solo_dashboard_node_(std::make_shared<solo_dashboard::Rosnode>())
 {
   setObjectName("Solo Dashboard");
 }
@@ -36,9 +54,10 @@ void SoloDashboard::initPlugin(qt_gui_cpp::PluginContext & context)
   // Extend the widget with all attributes and children from UI file
   ui_.setupUi(widget_);
   // Add widget to the user interface
-  if (context.serialNumber() > 1) {
-    widget_->setWindowTitle(
-      widget_->windowTitle() + " (" + QString::number(context.serialNumber()) + ")");
+  if (context.serialNumber() > 1)
+  {
+    widget_->setWindowTitle(widget_->windowTitle() + " (" +
+                            QString::number(context.serialNumber()) + ")");
   }
   context.addWidget(widget_);
 
@@ -75,9 +94,8 @@ void SoloDashboard::shutdownPlugin()
   // TODO(my_username): unregister all publishers here
 }
 
-void SoloDashboard::saveSettings(
-  qt_gui_cpp::Settings & plugin_settings,
-  qt_gui_cpp::Settings & instance_settings) const
+void SoloDashboard::saveSettings(qt_gui_cpp::Settings & plugin_settings,
+                                 qt_gui_cpp::Settings & instance_settings) const
 {
   // TODO(my_username): save intrinsic configuration, usually using:
   // instance_settings.setValue(k, v)
@@ -85,9 +103,8 @@ void SoloDashboard::saveSettings(
   (void)instance_settings;
 }
 
-void SoloDashboard::restoreSettings(
-  const qt_gui_cpp::Settings & plugin_settings,
-  const qt_gui_cpp::Settings & instance_settings)
+void SoloDashboard::restoreSettings(const qt_gui_cpp::Settings & plugin_settings,
+                                    const qt_gui_cpp::Settings & instance_settings)
 {
   // TODO(my_username): restore intrinsic configuration, usually using:
   // v = instance_settings.value(k)
@@ -110,9 +127,12 @@ void SoloDashboard::display_timer_callback()
 QString SoloDashboard::get_pub_onoff()
 {
   QString q_str;
-  if (solo_dashboard_node_->pub_onoff_ == true) {
+  if (solo_dashboard_node_->pub_onoff_ == true)
+  {
     q_str = "on";
-  } else {
+  }
+  else
+  {
     q_str = "off";
   }
 
@@ -122,9 +142,12 @@ QString SoloDashboard::get_pub_onoff()
 QString SoloDashboard::get_sub_onoff()
 {
   QString q_str;
-  if (solo_dashboard_node_->sub_onoff_ == true) {
+  if (solo_dashboard_node_->sub_onoff_ == true)
+  {
     q_str = "on";
-  } else {
+  }
+  else
+  {
     q_str = "off";
   }
 
@@ -134,9 +157,12 @@ QString SoloDashboard::get_sub_onoff()
 QString SoloDashboard::get_solo_test_onoff()
 {
   QString q_str;
-  if (solo_dashboard_node_->solo_test_onoff_ == true) {
+  if (solo_dashboard_node_->solo_test_onoff_ == true)
+  {
     q_str = "on";
-  } else {
+  }
+  else
+  {
     q_str = "off";
   }
 
