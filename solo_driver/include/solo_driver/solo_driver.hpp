@@ -18,6 +18,12 @@
 #include <memory>
 #include <vector>
 
+#include "odri_control_interface/utils.hpp"
+#include "odri_control_interface/imu.hpp"
+#include "odri_control_interface/calibration.hpp"
+#include "odri_control_interface/robot.hpp"
+#include "master_board_sdk/master_board_interface.h"
+
 namespace solo_driver
 {
 class SoloDriver

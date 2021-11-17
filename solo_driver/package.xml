@@ -13,7 +13,9 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <!-- <depend>robot_interfaces</depend> -->
+  <depend>Eigen3</depend>
+  <depend>master_board_sdk</depend>
+  <depend>odri_control_interface</depend>
   <depend>sensor_msgs</depend>  <!-- temp -->
 
 </package>
