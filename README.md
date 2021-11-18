@@ -9,8 +9,19 @@ The Solo ROS is a set of ROS interfaces for the [Solo12](https://open-dynamic-ro
 - [vcstool](http://wiki.ros.org/vcstool)
 
 ## Installation
-- Dependencies in package.xml files using rosdep
-- Dependencies in solo.rosinstall file using rosinstall
+```sh
+(Download solo_ros.repos to ~/catkin_ws)
+$ cd ~/catkin_ws && wget -O solo_ros.repos 'https://raw.githubusercontent.com/ipab-slmc/solo_ros/devel/solo_ros.repos?token=AJGY62OKYWIZVMD7VSWYVPTBT5BYU'
+
+(Download source dependency packages)
+$ vcs import src < solo_ros.repos
+
+(Download git submodules)
+$ find . -maxdepth 3 -name .git -type d | rev | cut -c 6- | rev | xargs -I {} git -C {} submodule update --init
+
+(Install binary dependency packages)
+$ rosdep install --from-paths src --ignore-src --rosdistro noetic -r -y
+```
 - Others
   - pickle
   ```sh
